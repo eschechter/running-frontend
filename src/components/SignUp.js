@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+import { signUp } from "../actions.js";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 import { Form } from "semantic-ui-react";
 
 class SignUp extends Component {
@@ -25,7 +28,17 @@ class SignUp extends Component {
         <br />
         <h1>Sign Up</h1>
         <br />
-        <Form onSubmit={() => {}}>
+        <Form
+          onSubmit={e => {
+            e.preventDefault();
+            this.props.signUp(
+              this.state.email,
+              this.state.password,
+              this.state.name,
+              this.props.history
+            );
+          }}
+        >
           {/* <Form.Group widths="equal"> */}
           <Form.Field>
             <Form.Input
@@ -65,4 +78,17 @@ class SignUp extends Component {
   }
 }
 
-export default SignUp;
+function mdp(dispatch) {
+  return {
+    signUp: (email, password, name, history) => {
+      signUp(dispatch, { email, password, name }, history)();
+    }
+  };
+}
+
+export default withRouter(
+  connect(
+    null,
+    mdp
+  )(SignUp)
+);
