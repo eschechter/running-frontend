@@ -3,7 +3,8 @@ import haversineSum from "./HelperFunctions/haversineSum";
 
 const defaultState = {
   makeRunMarkers: [],
-  runs: []
+  runs: [],
+  user: {}
 };
 
 function makeRunMarkersReducer(state = defaultState.makeRunMarkers, action) {
@@ -47,8 +48,22 @@ function runsReducer(state = defaultState.runs, action) {
   }
 }
 
+function userReducer(state = defaultState.user, action) {
+  switch (action.type) {
+    case "LOGIN_USER":
+      return action.payload;
+    case "RETRIEVE_USER":
+      return action.payload;
+    case "SIGN_IN_USER":
+      return action.payload;
+    default:
+      return state;
+  }
+}
+
 const reducer = combineReducers({
   makeRunMarkers: makeRunMarkersReducer,
-  runs: runsReducer
+  runs: runsReducer,
+  user: userReducer
 });
 export default reducer;

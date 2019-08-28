@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Form } from "semantic-ui-react";
 import { withRouter } from "react-router-dom";
+import { loginUser } from "../actions";
+import { connect } from "react-redux";
 
 class Login extends Component {
   state = {
@@ -22,7 +24,16 @@ class Login extends Component {
         <br />
         <h1>Sign In</h1>
         <br />
-        <Form onSubmit={() => {}}>
+        <Form
+          onSubmit={e => {
+            e.preventDefault();
+            this.props.loginSubmit(
+              this.state.email,
+              this.state.password,
+              this.props.history
+            );
+          }}
+        >
           <Form.Field>
             <Form.Input
               name="email"
@@ -59,4 +70,17 @@ class Login extends Component {
   }
 }
 
-export default withRouter(Login);
+function mdp(dispatch) {
+  return {
+    loginSubmit: (email, password, history) => {
+      loginUser(dispatch, { email, password }, history)();
+    }
+  };
+}
+
+export default withRouter(
+  connect(
+    null,
+    mdp
+  )(Login)
+);
