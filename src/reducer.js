@@ -42,6 +42,7 @@ function makeRunMarkersReducer(state = defaultState.makeRunMarkers, action) {
 function runsReducer(state = defaultState.runs, action) {
   switch (action.type) {
     case "FETCH_RUNS":
+      console.log("fetching", action.payload);
       return action.payload;
     default:
       return state;
@@ -54,7 +55,7 @@ function userReducer(state = defaultState.user, action) {
       return action.payload;
     case "RETRIEVE_USER":
       return action.payload;
-    case "SIGN_IN_USER":
+    case "SIGN_UP_USER":
       return action.payload;
     default:
       return state;

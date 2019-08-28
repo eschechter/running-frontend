@@ -16,7 +16,7 @@ function loginUser(dispatch, user, history) {
         if (data.message === "Invalid email or password")
           alert("invalid email or password");
         else {
-          dispatch({ type: "LOGIN_USER", payload: data });
+          dispatch({ type: "LOGIN_USER", payload: data.user });
           localStorage.setItem("running-token", data.jwt);
           history.push("/runs");
         }
@@ -42,7 +42,12 @@ function retrieveUser(dispatch, token, history) {
           alert("invalid token");
         else {
           dispatch({ type: "RETRIEVE_USER", payload: user });
-          history.push("/runs");
+          if (
+            document.location.href === "http://localhost:3001/login" ||
+            document.location.href === "http://localhost:3001/sign-up"
+          ) {
+            history.push("/runs");
+          }
         }
       });
   };
@@ -68,10 +73,22 @@ function signUp(dispatch, user, history) {
       .then(data => {
         console.log(data);
         localStorage.setItem("running-token", data.jwt);
-        dispatch({ type: "SIGN_UP_USER", payload: data });
+        dispatch({ type: "SIGN_UP_USER", payload: data.user });
         history.push("/runs");
       });
   };
 }
 
-export { loginUser, retrieveUser, signUp };
+function fetchRuns(dispatch, userId) {
+  return function() {
+    console.log("fetching runs");
+    return fetch(`http://localhost:3000/users/${userId}/runs`)
+      .then(resp => resp.json())
+      .then(runs => {
+        console.log(runs);
+        dispatch({ type: "FETCH_RUNS", payload: runs });
+      });
+  };
+}
+
+export { loginUser, retrieveUser, signUp, fetchRuns };
