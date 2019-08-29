@@ -27,10 +27,14 @@ class Login extends Component {
         <Form
           onSubmit={e => {
             e.preventDefault();
-            this.props.loginSubmit(
-              this.state.email,
-              this.state.password,
-              this.props.history
+            this.props.dispatch(
+              loginUser(
+                {
+                  email: this.state.email,
+                  password: this.state.password
+                },
+                this.props.history
+              )
             );
           }}
         >
@@ -70,17 +74,16 @@ class Login extends Component {
   }
 }
 
-function mdp(dispatch) {
-  return {
-    loginSubmit: (email, password, history) => {
-      loginUser(dispatch, { email, password }, history)();
-    }
-  };
-}
+// function mdp(dispatch) {
+//   return {
+//     loginSubmit: (email, password, history) => {
+//       loginUser(dispatch, { email, password }, history)();
+//     }
+//   };
+// }
 
 export default withRouter(
-  connect(
-    null,
-    mdp
-  )(Login)
+  connect(state => ({
+    user: state.user
+  }))(Login)
 );

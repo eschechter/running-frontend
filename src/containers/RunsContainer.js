@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Route } from "react-router-dom";
+import { Route, withRouter } from "react-router-dom";
 import { fetchRuns } from "../actions";
+import NewRunMap from "../components/NewRunMap";
 
 class RunsContainer extends Component {
   componentDidUpdate(prevProps) {
-    if (prevProps.user !== this.props.user) {
+    if (prevProps.user.id !== this.props.user.id) {
       this.props.fetchRuns(this.props.user.id);
     }
   }
@@ -15,9 +16,8 @@ class RunsContainer extends Component {
     const runComps = this.props.runs.map(run => <li>{run.length}</li>);
     return (
       <>
-        <h1>Welcome: {this.props.user.name}</h1>
-        <ul>{runComps}</ul>
-        <Route path="/runs/extra" render={() => <h1>Extra route</h1>} />
+        <Route path="/runs/new" render={() => <NewRunMap />} />
+        <Route exact path="/runs/" render={() => runComps} />
       </>
     );
   }
@@ -36,7 +36,9 @@ function mdp(dispatch) {
   };
 }
 
-export default connect(
-  msp,
-  mdp
-)(RunsContainer);
+export default withRouter(
+  connect(
+    msp,
+    mdp
+  )(RunsContainer)
+);

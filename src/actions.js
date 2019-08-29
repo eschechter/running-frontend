@@ -1,5 +1,5 @@
-function loginUser(dispatch, user, history) {
-  return function() {
+function loginUser(user, history) {
+  return function(dispatch, getState) {
     return fetch("http://localhost:3000/login", {
       method: "POST",
       headers: {
@@ -12,20 +12,20 @@ function loginUser(dispatch, user, history) {
     })
       .then(res => res.json())
       .then(data => {
-        console.log("data", data);
+        console.log("getState", getState().runs);
         if (data.message === "Invalid email or password")
           alert("invalid email or password");
         else {
+          history.push("/runs");
           dispatch({ type: "LOGIN_USER", payload: data.user });
           localStorage.setItem("running-token", data.jwt);
-          history.push("/runs");
         }
       });
   };
 }
 
-function retrieveUser(dispatch, token, history) {
-  return function() {
+function retrieveUser(token, history) {
+  return function(dispatch) {
     return fetch("http://localhost:3000/retrieve-user", {
       method: "GET",
       headers: {
@@ -41,20 +41,20 @@ function retrieveUser(dispatch, token, history) {
         if (user.message === "Invalid email or password")
           alert("invalid token");
         else {
-          dispatch({ type: "RETRIEVE_USER", payload: user });
           if (
-            document.location.href === "http://localhost:3001/login" ||
+            document.location.href === "http://localhost:3001/" ||
             document.location.href === "http://localhost:3001/sign-up"
           ) {
             history.push("/runs");
           }
+          dispatch({ type: "RETRIEVE_USER", payload: user });
         }
       });
   };
 }
 
-function signUp(dispatch, user, history) {
-  return function() {
+function signUp(user, history) {
+  return function(dispatch, _) {
     return fetch("http://localhost:3000/sign-up", {
       method: "POST",
       headers: {
@@ -72,16 +72,17 @@ function signUp(dispatch, user, history) {
       .then(res => res.json())
       .then(data => {
         console.log(data);
+
+        history.push("/runs");
         localStorage.setItem("running-token", data.jwt);
         dispatch({ type: "SIGN_UP_USER", payload: data.user });
-        history.push("/runs");
       });
   };
 }
 
 function fetchRuns(dispatch, userId) {
-  return function() {
-    console.log("fetching runs");
+  return function(_, getState) {
+    console.log("getState", getState);
     return fetch(`http://localhost:3000/users/${userId}/runs`)
       .then(resp => resp.json())
       .then(runs => {
@@ -91,4 +92,6 @@ function fetchRuns(dispatch, userId) {
   };
 }
 
-export { loginUser, retrieveUser, signUp, fetchRuns };
+function postRun(dispatch, runMarkers) {}
+
+export { loginUser, retrieveUser, signUp, fetchRuns, postRun };

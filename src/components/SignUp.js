@@ -31,11 +31,15 @@ class SignUp extends Component {
         <Form
           onSubmit={e => {
             e.preventDefault();
-            this.props.signUp(
-              this.state.email,
-              this.state.password,
-              this.state.name,
-              this.props.history
+            this.props.dispatch(
+              signUp(
+                {
+                  email: this.state.email,
+                  password: this.state.password,
+                  name: this.state.name
+                },
+                this.props.history
+              )
             );
           }}
         >
@@ -78,17 +82,8 @@ class SignUp extends Component {
   }
 }
 
-function mdp(dispatch) {
-  return {
-    signUp: (email, password, name, history) => {
-      signUp(dispatch, { email, password, name }, history)();
-    }
-  };
-}
-
 export default withRouter(
-  connect(
-    null,
-    mdp
-  )(SignUp)
+  connect(state => ({
+    user: state.user
+  }))(SignUp)
 );

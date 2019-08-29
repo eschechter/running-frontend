@@ -6,35 +6,40 @@ import SignUp from "./components/SignUp";
 import RunsContainer from "./containers/RunsContainer";
 import { retrieveUser } from "./actions";
 import { connect } from "react-redux";
+import NavBar from "./components/NavBar";
 
 class App extends Component {
   componentDidMount() {
     const token = localStorage.getItem("running-token");
     if (token) {
-      this.props.retrieveUser(token, this.props.history);
+      this.props.dispatch(retrieveUser(token, this.props.history));
     } else {
-      this.props.history.push("/login");
+      this.props.history.push("/");
     }
   }
 
   render() {
     return (
       <div className="App">
-        <Route path="/login" render={() => <Login />} />
+        <Route exact path="/" render={() => <Login />} />
         <Route path="/sign-up" render={() => <SignUp />} />
-        <Route path="/runs" render={() => <RunsContainer />} />
+        <Route
+          path="/runs"
+          render={() => (
+            <>
+              <NavBar />
+              <h1>Welcome: {this.props.user.name}</h1>
+              <RunsContainer />
+            </>
+          )}
+        />
       </div>
     );
   }
 }
 
-function mdp(dispatch) {
-  return {
-    retrieveUser: (token, history) => retrieveUser(dispatch, token, history)()
-  };
-}
-
-export default connect(
-  null,
-  mdp
-)(withRouter(App));
+export default withRouter(
+  connect(state => ({
+    user: state.user
+  }))(App)
+);
