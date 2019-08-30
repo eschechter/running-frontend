@@ -20,16 +20,14 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div id="app">
         <Route exact path="/" render={() => <Login />} />
         <Route path="/sign-up" render={() => <SignUp />} />
         <Route
           path="/runs"
           render={() => (
             <>
-              <NavBar />
-              <h1>Welcome: {this.props.user.name}</h1>
-              <RunsContainer />
+              <NavBar /> <RunsContainer />
             </>
           )}
         />

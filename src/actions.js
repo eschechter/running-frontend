@@ -1,6 +1,8 @@
+import haversineSum from "./HelperFunctions/haversineSum";
+
 function loginUser(user, history) {
   return function(dispatch, getState) {
-    return fetch("http://localhost:3000/login", {
+    fetch("http://localhost:3000/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -12,7 +14,6 @@ function loginUser(user, history) {
     })
       .then(res => res.json())
       .then(data => {
-        console.log("getState", getState().runs);
         if (data.message === "Invalid email or password")
           alert("invalid email or password");
         else {
@@ -26,7 +27,7 @@ function loginUser(user, history) {
 
 function retrieveUser(token, history) {
   return function(dispatch) {
-    return fetch("http://localhost:3000/retrieve-user", {
+    fetch("http://localhost:3000/retrieve-user", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -37,7 +38,6 @@ function retrieveUser(token, history) {
       .then(res => res.json())
       .then(user => {
         // check for bad user case at some point
-        console.log("user", user);
         if (user.message === "Invalid email or password")
           alert("invalid token");
         else {
@@ -54,8 +54,8 @@ function retrieveUser(token, history) {
 }
 
 function signUp(user, history) {
-  return function(dispatch, _) {
-    return fetch("http://localhost:3000/sign-up", {
+  return function(dispatch) {
+    fetch("http://localhost:3000/sign-up", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -71,8 +71,6 @@ function signUp(user, history) {
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data);
-
         history.push("/runs");
         localStorage.setItem("running-token", data.jwt);
         dispatch({ type: "SIGN_UP_USER", payload: data.user });
@@ -80,18 +78,64 @@ function signUp(user, history) {
   };
 }
 
-function fetchRuns(dispatch, userId) {
-  return function(_, getState) {
-    console.log("getState", getState);
-    return fetch(`http://localhost:3000/users/${userId}/runs`)
+function fetchRuns() {
+  return function(dispatch, getState) {
+    fetch(`http://localhost:3000/users/${getState().user.id}/runs`)
       .then(resp => resp.json())
       .then(runs => {
-        console.log(runs);
         dispatch({ type: "FETCH_RUNS", payload: runs });
       });
   };
 }
 
-function postRun(dispatch, runMarkers) {}
+function postRun(history) {
+  return function(dispatch, getState) {
+    if (getState().makeRunMarkers.length < 2) {
+      alert("Your route must include at least two points");
+    } else {
+      fetch("http://localhost:3000/runs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          run: {
+            user_id: getState().user.id,
+            coordinates: getState().makeRunMarkers.map(longLatArray => {
+              return { longitude: longLatArray[0], latitude: longLatArray[1] };
+            }),
+            length: haversineSum(getState().makeRunMarkers)
+          }
+        })
+      })
+        .then(resp => resp.json())
+        .then(run => {
+          console.log("detailed run", run);
+          dispatch({ type: "CLEAR_MARKERS" });
+          dispatch({ type: "ADD_RUN", payload: run });
+          dispatch({ type: "FETCH_DETAILED_RUN", payload: run });
+          history.push("/runs/display");
+        });
+    }
+  };
+}
 
-export { loginUser, retrieveUser, signUp, fetchRuns, postRun };
+function fetchDetailedRun(history, runId) {
+  return function(dispatch) {
+    fetch(`http://localhost:3000/runs/${runId}`)
+      .then(resp => resp.json())
+      .then(run => {
+        dispatch({ type: "FETCH_DETAILED_RUN", payload: run });
+        history.push("/runs/display");
+      });
+  };
+}
+
+export {
+  loginUser,
+  retrieveUser,
+  signUp,
+  fetchRuns,
+  postRun,
+  fetchDetailedRun
+};

@@ -1,6 +1,7 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { Menu } from "semantic-ui-react";
+import { connect } from "react-redux";
 
 function NavBar(props) {
   return (
@@ -9,13 +10,41 @@ function NavBar(props) {
         as="a"
         onClick={_ => {
           window.localStorage.removeItem("running-token");
+          props.logout();
           props.history.push("/");
         }}
       >
         Logout
       </Menu.Item>
+      <Menu.Item
+        as="a"
+        onClick={_ => {
+          props.history.push("/runs");
+        }}
+      >
+        My Runs
+      </Menu.Item>
+      <Menu.Item
+        as="a"
+        onClick={_ => {
+          props.history.push("/runs/new");
+        }}
+      >
+        New Run
+      </Menu.Item>
     </Menu>
   );
 }
 
-export default withRouter(NavBar);
+function mdp(dispatch) {
+  return {
+    logout: () => dispatch({ type: "LOGOUT" })
+  };
+}
+
+export default withRouter(
+  connect(
+    null,
+    mdp
+  )(NavBar)
+);
