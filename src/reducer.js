@@ -1,38 +1,19 @@
 import { combineReducers } from "redux";
-import haversineSum from "./HelperFunctions/haversineSum";
 
 const defaultState = {
   makeRunMarkers: [],
   runs: [],
-  user: {}
+  user: {},
+  displayedRun: {}
 };
 
 function makeRunMarkersReducer(state = defaultState.makeRunMarkers, action) {
   switch (action.type) {
-    case "ADD-MARKER":
+    case "ADD_MARKER":
       return [...state, action.payload];
-    case "REMOVE-MARKER":
+    case "REMOVE_MARKER":
       return state.slice(0, state.length - 1);
-    case "POST":
-      if (state.length < 2) {
-        alert("Your route must include at least two points");
-        return state;
-      }
-      fetch("http://localhost:3000/runs", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          run: {
-            user_id: 3,
-            coordinates: state.map(longLatArray => {
-              return { longitude: longLatArray[0], latitude: longLatArray[1] };
-            }),
-            length: haversineSum(state)
-          }
-        })
-      });
+    case "CLEAR_MARKERS":
       return [];
     default:
       return state;
@@ -42,8 +23,9 @@ function makeRunMarkersReducer(state = defaultState.makeRunMarkers, action) {
 function runsReducer(state = defaultState.runs, action) {
   switch (action.type) {
     case "FETCH_RUNS":
-      console.log("fetching", action.payload);
       return action.payload;
+    case "ADD_RUN":
+      return [...state, action.payload];
     default:
       return state;
   }
@@ -62,9 +44,27 @@ function userReducer(state = defaultState.user, action) {
   }
 }
 
-const reducer = combineReducers({
+function currentRunReducer(state = defaultState.displayedRun, action) {
+  switch (action.type) {
+    case "FETCH_DETAILED_RUN":
+      return action.payload;
+    default:
+      return state;
+  }
+}
+
+const appReducer = combineReducers({
   makeRunMarkers: makeRunMarkersReducer,
   runs: runsReducer,
-  user: userReducer
+  user: userReducer,
+  displayedRun: currentRunReducer
 });
+
+const reducer = (state, action) => {
+  if (action.type === "LOGOUT") {
+    state = undefined;
+  }
+  return appReducer(state, action);
+};
+
 export default reducer;

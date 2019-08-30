@@ -2,8 +2,11 @@ import React, { Component } from "react";
 import ReactMapGL, { Marker } from "react-map-gl";
 import PolylineOverlay from "./PolylineOverlay";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import haversineSum from "../HelperFunctions/haversineSum";
 import { postRun } from "../actions";
+import startLine from "../images/start-line.png";
+import runMarker from "../images/run-marker.png";
 
 class NewRunMap extends Component {
   state = {
@@ -17,28 +20,38 @@ class NewRunMap extends Component {
   };
 
   render() {
-    const markerComps = this.props.markers.map(longLat => (
-      <Marker
-        longitude={longLat[0]}
-        latitude={longLat[1]}
-        offsetLeft={-10}
-        offsetTop={-10}
-      >
-        <img
-          width="20px"
-          height="20px"
-          src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png"
-        />
-      </Marker>
-    ));
+    console.log(this.props.markers);
+    let markerComps = [];
+
+    for (let i = 0; i < this.props.markers.length; i++) {
+      markerComps.push(
+        <Marker
+          key={i}
+          longitude={this.props.markers[i][0]}
+          latitude={this.props.markers[i][1]}
+          offsetLeft={-10}
+          offsetTop={-10}
+        >
+          <img
+            width="20px"
+            height="20px"
+            src={i === 0 ? startLine : runMarker}
+          />
+        </Marker>
+      );
+    }
     return (
       <>
         <h1>{haversineSum(this.props.markers)}</h1>
-        <button onClick={this.props.post}>Add to backend</button>
+        <button onClick={_ => this.props.postRun(this.props.history)}>
+          Add to backend
+        </button>
+        <button onClick={_ => this.props.removeMarker()}>
+          Remove last point
+        </button>
         <ReactMapGL
           {...this.state.viewport}
           onClick={e => {
-            console.log(e);
             this.props.addMarker(e.lngLat);
           }}
           mapOptions={{ style: "mapbox://styles/mapbox/streets-v10" }}
@@ -57,13 +70,11 @@ function mdp(dispatch) {
   return {
     addMarker: longLat =>
       dispatch({
-        type: "ADD-MARKER",
+        type: "ADD_MARKER",
         payload: longLat
       }),
-    post: () =>
-      dispatch({
-        type: "POST"
-      })
+    removeMarker: () => dispatch({ type: "REMOVE_MARKER" }),
+    postRun: history => dispatch(postRun(history))
   };
 }
 
@@ -73,7 +84,9 @@ function msp(state) {
   };
 }
 
-export default connect(
-  msp,
-  mdp
-)(NewRunMap);
+export default withRouter(
+  connect(
+    msp,
+    mdp
+  )(NewRunMap)
+);

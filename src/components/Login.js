@@ -1,5 +1,10 @@
 import React, { Component } from "react";
-import { Form } from "semantic-ui-react";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+
 import { withRouter } from "react-router-dom";
 import { loginUser } from "../actions";
 import { connect } from "react-redux";
@@ -19,56 +24,65 @@ class Login extends Component {
 
   render() {
     return (
-      <div>
-        {/* <Card > */}
-        <br />
-        <h1>Sign In</h1>
-        <br />
-        <Form
-          onSubmit={e => {
-            e.preventDefault();
-            this.props.dispatch(
-              loginUser(
-                {
-                  email: this.state.email,
-                  password: this.state.password
-                },
-                this.props.history
-              )
-            );
-          }}
-        >
-          <Form.Field>
-            <Form.Input
-              name="email"
-              placeholder="Enter your email address"
-              onChange={this.handleChange}
-              value={this.state.email}
-            />
-          </Form.Field>
-          <br />
-          <Form.Field>
-            <Form.Input
-              name="password"
-              type="password"
-              placeholder="Enter your password"
-              onChange={this.handleChange}
-              value={this.state.password}
-            />
-          </Form.Field>
+      <div className="login-background">
+        <Container id="white-background">
+          <Row>
+            <Col>
+              <br />
+              <h1>Sign In</h1>
+              <br />
+              <Form
+                onSubmit={e => {
+                  e.preventDefault();
+                  this.props.dispatch(
+                    loginUser(
+                      {
+                        email: this.state.email,
+                        password: this.state.password
+                      },
+                      this.props.history
+                    )
+                  );
+                }}
+              >
+                <Form.Group>
+                  <Form.Control
+                    name="email"
+                    placeholder="Enter your email address"
+                    onChange={this.handleChange}
+                    value={this.state.email}
+                  />
+                </Form.Group>
+                <br />
+                <Form.Group>
+                  <Form.Control
+                    name="password"
+                    type="password"
+                    placeholder="Enter your password"
+                    onChange={this.handleChange}
+                    value={this.state.password}
+                  />
+                </Form.Group>
+                <br />
 
-          <br />
-          <Form.Button>Submit</Form.Button>
-        </Form>
-
-        <h3>New User?</h3>
-        <h3>
-          <a onClick={_ => this.props.history.push("/sign-up")}>
-            Sign up here!
-          </a>
-        </h3>
-        <br />
-        {/* </Card> */}
+                <Button className="btn-block" variant="primary" type="submit">
+                  Login
+                </Button>
+              </Form>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <br />
+              <br />
+              <h3>New User?</h3>
+              <br />
+              <Button onClick={_ => this.props.history.push("/sign-up")}>
+                Sign up here!
+              </Button>
+            </Col>
+          </Row>
+        </Container>
       </div>
     );
   }
