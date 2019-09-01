@@ -26,6 +26,9 @@ function runsReducer(state = defaultState.runs, action) {
       return action.payload;
     case "ADD_RUN":
       return [...state, action.payload];
+    case "UPDATE_RUN":
+      const unchangedRuns = state.filter(run => run.id !== action.payload.id);
+      return [...unchangedRuns, action.payload];
     default:
       return state;
   }
@@ -48,6 +51,8 @@ function currentRunReducer(state = defaultState.displayedRun, action) {
   switch (action.type) {
     case "FETCH_DETAILED_RUN":
       return action.payload;
+    case "COMPLETE_RUN":
+      return { ...state, duration: action.payload };
     default:
       return state;
   }

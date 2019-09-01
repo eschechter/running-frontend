@@ -131,11 +131,34 @@ function fetchDetailedRun(history, runId) {
   };
 }
 
+function completeRun(duration) {
+  return function(dispatch, getState) {
+    console.log("patching");
+
+    fetch(`http://localhost:3000/runs/${getState().displayedRun.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Accepts: "application/json"
+      },
+      body: JSON.stringify({
+        duration
+      })
+    })
+      .then(resp => resp.json())
+      .then(run => {
+        dispatch({ type: "COMPLETE_RUN", payload: run.duration });
+        dispatch({ type: "UPDATE_RUN", payload: run });
+      });
+  };
+}
+
 export {
   loginUser,
   retrieveUser,
   signUp,
   fetchRuns,
   postRun,
-  fetchDetailedRun
+  fetchDetailedRun,
+  completeRun
 };

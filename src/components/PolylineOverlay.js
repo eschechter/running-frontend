@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import { CanvasOverlay } from "react-map-gl";
 
 export default class PolylineOverlay extends PureComponent {
-  redraw = ({ width, height, ctx, isDragging, project, unproject }) => {
+  _redraw({ width, height, ctx, isDragging, project, unproject }) {
     const {
       points,
       color = "red",
@@ -22,9 +22,9 @@ export default class PolylineOverlay extends PureComponent {
       });
       ctx.stroke();
     }
-  };
+  }
 
   render() {
-    return <CanvasOverlay redraw={this.redraw} />;
+    return <CanvasOverlay redraw={this._redraw.bind(this)} />;
   }
 }
