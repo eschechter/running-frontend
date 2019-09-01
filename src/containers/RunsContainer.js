@@ -19,7 +19,7 @@ class RunsContainer extends Component {
           this.props.dispatch(fetchDetailedRun(this.props.history, run.id))
         }
       >
-        {run.length}
+        {`Length: ${run.length} miles. Time to complete: ${run.duration}`}
       </li>
     ));
     return (

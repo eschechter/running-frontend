@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import WebMercatorViewport from "viewport-mercator-project";
-import ReactMapGL, { Marker } from "react-map-gl";
+import { StaticMap, Marker } from "react-map-gl";
 import PolylineOverlay from "./PolylineOverlay";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -9,15 +9,32 @@ import startLine from "../images/start-line.png";
 import runMarker from "../images/run-marker.png";
 import checkeredFlag from "../images/checkered-flag.png";
 
-class NewRunMap extends Component {
+import { completeRun } from "../actions";
+
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+
+class DisplayRunMap extends Component {
   state = {
     viewport: {
-      width: "100%",
-      height: 400,
+      width: "60%",
+      height: "70%",
       latitude: 40.6708,
       longitude: -73.9645,
       zoom: 8
-    }
+    },
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+    numResizes: 0
+  };
+
+  changeHandler = e => {
+    const inputType = e.target.name;
+    this.setState({
+      [inputType]: e.target.value
+    });
   };
 
   componentDidMount() {
@@ -34,7 +51,10 @@ class NewRunMap extends Component {
       const maxLat = Math.max(...latitudes);
       const minLat = Math.min(...latitudes);
 
-      const viewport = new WebMercatorViewport({ width: 600, height: 400 });
+      const viewport = new WebMercatorViewport({
+        width: window.innerWidth * 0.59,
+        height: window.innerHeight * 0.69
+      });
       const bound = viewport.fitBounds([[minLong, minLat], [maxLong, maxLat]], {
         padding: 20,
         offset: [0, -40]
@@ -53,6 +73,7 @@ class NewRunMap extends Component {
   }
 
   render() {
+    console.log("rerendering");
     if (this.props.displayedRun.id) {
       const arrayMarkers = this.props.displayedRun.coordinates.map(point => [
         point.x,
@@ -82,21 +103,79 @@ class NewRunMap extends Component {
 
       return (
         <>
-          <h1>{haversineSum(arrayMarkers)}</h1>
-          <ReactMapGL
+          <h1>Distance: {haversineSum(arrayMarkers)} miles</h1>
+          <Form
+            onSubmit={e => {
+              e.preventDefault();
+              this.props.completeRun(
+                this.state.hours * 3600 +
+                  this.state.minutes * 60 +
+                  this.state.seconds
+              );
+            }}
+          >
+            <Form.Row>
+              <Col></Col>
+              <Col></Col>
+
+              <Col>
+                <Form.Label>Hours</Form.Label>
+                <Form.Control
+                  onChange={this.changeHandler}
+                  name="hours"
+                  type="number"
+                  min={0}
+                  max={10}
+                />
+              </Col>
+              <Col>
+                <Form.Label>Minutes</Form.Label>
+
+                <Form.Control
+                  onChange={this.changeHandler}
+                  name="minutes"
+                  type="number"
+                  min={0}
+                  max={59}
+                />
+              </Col>
+              <Col>
+                <Form.Label>Seconds</Form.Label>
+
+                <Form.Control
+                  onChange={this.changeHandler}
+                  name="seconds"
+                  type="number"
+                  min={0}
+                  max={59}
+                />
+              </Col>
+              <Col></Col>
+              <Col></Col>
+            </Form.Row>
+            <br />
+            <Form.Row>
+              <Col></Col>
+              <Col></Col>
+              <Col>
+                <Button type="submit">Mark Run Complete</Button>
+              </Col>
+              <Col></Col>
+              <Col></Col>
+            </Form.Row>
+          </Form>
+          <br />
+          <StaticMap
+            onResize={_ =>
+              this.setState({ numResizes: this.state.numResizes + 1 })
+            }
             {...this.state.viewport}
             mapOptions={{ style: "mapbox://styles/mapbox/streets-v10" }}
-            onViewportChange={viewport => {
-              if (viewport.longitude > 0) {
-                viewport.longitude = 0;
-              }
-              this.setState(viewport);
-            }}
             mapboxApiAccessToken={process.env.REACT_APP_API_KEY}
           >
             {markerComps}
             <PolylineOverlay points={arrayMarkers} />
-          </ReactMapGL>
+          </StaticMap>
         </>
       );
     } else {
@@ -105,10 +184,21 @@ class NewRunMap extends Component {
   }
 }
 
+function mdp(dispatch) {
+  return {
+    completeRun: duration => dispatch(completeRun(duration))
+  };
+}
+
 function msp(state) {
   return {
     displayedRun: state.displayedRun
   };
 }
 
-export default withRouter(connect(msp)(NewRunMap));
+export default withRouter(
+  connect(
+    msp,
+    mdp
+  )(DisplayRunMap)
+);

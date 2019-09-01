@@ -29,8 +29,10 @@ class Login extends Component {
           <Row>
             <Col>
               <br />
-              <h1>Sign In</h1>
+              <h1>App Name</h1>
               <br />
+
+              <h2>Sign In</h2>
               <Form
                 onSubmit={e => {
                   e.preventDefault();

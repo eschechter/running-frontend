@@ -11,13 +11,35 @@ import runMarker from "../images/run-marker.png";
 class NewRunMap extends Component {
   state = {
     viewport: {
-      width: "100%",
-      height: 400,
+      width: "60%",
+      height: "70%",
       latitude: 40.6708,
       longitude: -73.9645,
       zoom: 8
     }
   };
+
+  componentDidMount() {
+    window.addEventListener("resize", this.resizeHandler);
+    this.resizeHandler();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.resizeHandler);
+  }
+
+  resizeHandler = () => {
+    this.viewportChangeHandler({
+      width: window.innerWidth * 0.6,
+      height: window.innerHeight * 0.7
+    });
+  };
+
+  viewportChangeHandler(viewport) {
+    this.setState({
+      viewport: { ...this.state.viewport, ...viewport }
+    });
+  }
 
   render() {
     console.log(this.props.markers);
@@ -42,7 +64,7 @@ class NewRunMap extends Component {
     }
     return (
       <>
-        <h1>{haversineSum(this.props.markers)}</h1>
+        <h1>Distance: {haversineSum(this.props.markers)} miles</h1>
         <button onClick={_ => this.props.postRun(this.props.history)}>
           Add to backend
         </button>
@@ -55,7 +77,7 @@ class NewRunMap extends Component {
             this.props.addMarker(e.lngLat);
           }}
           mapOptions={{ style: "mapbox://styles/mapbox/streets-v10" }}
-          onViewportChange={viewport => this.setState({ viewport })}
+          onViewportChange={viewport => this.viewportChangeHandler(viewport)}
           mapboxApiAccessToken={process.env.REACT_APP_API_KEY}
         >
           {markerComps}
