@@ -1,7 +1,7 @@
 import haversineSum from "./HelperFunctions/haversineSum";
 
 function loginUser(user, history) {
-  return function(dispatch, getState) {
+  return function(dispatch) {
     fetch("http://localhost:3000/login", {
       method: "POST",
       headers: {

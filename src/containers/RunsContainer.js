@@ -2,8 +2,12 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Route, withRouter } from "react-router-dom";
 import { fetchRuns, fetchDetailedRun } from "../actions";
+
 import NewRunMap from "../components/NewRunMap";
 import DisplayRunMap from "../components/DisplayRunMap";
+import CompletedRunTable from "../components/CompletedRunTable";
+
+import parseTime from "../HelperFunctions/parseTime";
 
 class RunsContainer extends Component {
   componentDidUpdate(prevProps) {
@@ -13,13 +17,29 @@ class RunsContainer extends Component {
   }
 
   render() {
-    const runComps = this.props.runs.map(run => (
+    const completedRuns = this.props.runs.filter(run => run.completed);
+    const pendingdRuns = this.props.runs.filter(run => !run.completed);
+    const completedRunComps = completedRuns.map(run => {
+      return (
+        <li
+          onClick={_ =>
+            this.props.dispatch(fetchDetailedRun(this.props.history, run.id))
+          }
+        >
+          {`Length: ${run.length} miles. Time to complete: ${parseTime(
+            run.duration
+          )}`}
+        </li>
+      );
+    });
+
+    const pendingdRunComps = pendingdRuns.map(run => (
       <li
         onClick={_ =>
           this.props.dispatch(fetchDetailedRun(this.props.history, run.id))
         }
       >
-        {`Length: ${run.length} miles. Time to complete: ${run.duration}`}
+        {`Length: ${run.length} miles`}
       </li>
     ));
     return (
@@ -32,7 +52,12 @@ class RunsContainer extends Component {
           render={() => (
             <>
               <h1>Welcome: {this.props.user.name}</h1>
-              {runComps}
+
+              <h2>Planned Runs</h2>
+              <ol>{pendingdRunComps}</ol>
+              <br />
+              <h2>Completed Runs</h2>
+              <CompletedRunTable runs={completedRuns} />
             </>
           )}
         />

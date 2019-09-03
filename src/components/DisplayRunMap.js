@@ -1,19 +1,23 @@
 import React, { Component } from "react";
+
 import WebMercatorViewport from "viewport-mercator-project";
 import { StaticMap, Marker } from "react-map-gl";
 import PolylineOverlay from "./PolylineOverlay";
+
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+
 import haversineSum from "../HelperFunctions/haversineSum";
+
 import startLine from "../images/start-line.png";
 import runMarker from "../images/run-marker.png";
 import checkeredFlag from "../images/checkered-flag.png";
 
-import { completeRun } from "../actions";
+import moment from "moment";
 
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
+import FinishRunForm from "./FinishRunForm";
+
+import speedCalculator from "../HelperFunctions/speedCalculator";
 
 class DisplayRunMap extends Component {
   state = {
@@ -24,17 +28,7 @@ class DisplayRunMap extends Component {
       longitude: -73.9645,
       zoom: 8
     },
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
     numResizes: 0
-  };
-
-  changeHandler = e => {
-    const inputType = e.target.name;
-    this.setState({
-      [inputType]: e.target.value
-    });
   };
 
   componentDidMount() {
@@ -73,7 +67,6 @@ class DisplayRunMap extends Component {
   }
 
   render() {
-    console.log("rerendering");
     if (this.props.displayedRun.id) {
       const arrayMarkers = this.props.displayedRun.coordinates.map(point => [
         point.x,
@@ -100,70 +93,27 @@ class DisplayRunMap extends Component {
           </Marker>
         );
       }
+      const duration = this.props.displayedRun.completed
+        ? moment.duration(this.props.displayedRun.duration * 1000)
+        : null;
 
       return (
         <>
           <h1>Distance: {haversineSum(arrayMarkers)} miles</h1>
-          <Form
-            onSubmit={e => {
-              e.preventDefault();
-              this.props.completeRun(
-                this.state.hours * 3600 +
-                  this.state.minutes * 60 +
-                  this.state.seconds
-              );
-            }}
-          >
-            <Form.Row>
-              <Col></Col>
-              <Col></Col>
+          {this.props.displayedRun.completed ? (
+            <>
+              <h2>{`Time to complete: ${duration.hours()} hours, ${duration.minutes()} minutes, ${duration.seconds()} seconds`}</h2>
+              <h3>
+                {`Speed: ${speedCalculator(
+                  this.props.displayedRun.length,
+                  this.props.displayedRun.duration
+                )} mph`}
+              </h3>
+            </>
+          ) : (
+            <FinishRunForm />
+          )}
 
-              <Col>
-                <Form.Label>Hours</Form.Label>
-                <Form.Control
-                  onChange={this.changeHandler}
-                  name="hours"
-                  type="number"
-                  min={0}
-                  max={10}
-                />
-              </Col>
-              <Col>
-                <Form.Label>Minutes</Form.Label>
-
-                <Form.Control
-                  onChange={this.changeHandler}
-                  name="minutes"
-                  type="number"
-                  min={0}
-                  max={59}
-                />
-              </Col>
-              <Col>
-                <Form.Label>Seconds</Form.Label>
-
-                <Form.Control
-                  onChange={this.changeHandler}
-                  name="seconds"
-                  type="number"
-                  min={0}
-                  max={59}
-                />
-              </Col>
-              <Col></Col>
-              <Col></Col>
-            </Form.Row>
-            <br />
-            <Form.Row>
-              <Col></Col>
-              <Col></Col>
-              <Col>
-                <Button type="submit">Mark Run Complete</Button>
-              </Col>
-              <Col></Col>
-              <Col></Col>
-            </Form.Row>
-          </Form>
           <br />
           <StaticMap
             onResize={_ =>
@@ -183,13 +133,6 @@ class DisplayRunMap extends Component {
     }
   }
 }
-
-function mdp(dispatch) {
-  return {
-    completeRun: duration => dispatch(completeRun(duration))
-  };
-}
-
 function msp(state) {
   return {
     displayedRun: state.displayedRun
@@ -199,6 +142,6 @@ function msp(state) {
 export default withRouter(
   connect(
     msp,
-    mdp
+    null
   )(DisplayRunMap)
 );
