@@ -52,7 +52,7 @@ function currentRunReducer(state = defaultState.displayedRun, action) {
     case "FETCH_DETAILED_RUN":
       return action.payload;
     case "COMPLETE_RUN":
-      return { ...state, duration: action.payload };
+      return { ...state, duration: action.payload, completed: true };
     default:
       return state;
   }
