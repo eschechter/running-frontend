@@ -6,8 +6,7 @@ import { fetchRuns, fetchDetailedRun } from "../actions";
 import NewRunMap from "../components/NewRunMap";
 import DisplayRunMap from "../components/DisplayRunMap";
 import CompletedRunTable from "../components/CompletedRunTable";
-
-import parseTime from "../HelperFunctions/parseTime";
+import CompletedRunsChart from "../components/CompletedRunsChart";
 
 class RunsContainer extends Component {
   componentDidUpdate(prevProps) {
@@ -19,19 +18,6 @@ class RunsContainer extends Component {
   render() {
     const completedRuns = this.props.runs.filter(run => run.completed);
     const pendingdRuns = this.props.runs.filter(run => !run.completed);
-    const completedRunComps = completedRuns.map(run => {
-      return (
-        <li
-          onClick={_ =>
-            this.props.dispatch(fetchDetailedRun(this.props.history, run.id))
-          }
-        >
-          {`Length: ${run.length} miles. Time to complete: ${parseTime(
-            run.duration
-          )}`}
-        </li>
-      );
-    });
 
     const pendingdRunComps = pendingdRuns.map(run => (
       <li
@@ -58,6 +44,9 @@ class RunsContainer extends Component {
               <br />
               <h2>Completed Runs</h2>
               <CompletedRunTable runs={completedRuns} />
+              {completedRuns.length >= 2 ? (
+                <CompletedRunsChart runs={completedRuns} />
+              ) : null}
             </>
           )}
         />

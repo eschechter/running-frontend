@@ -8,15 +8,18 @@ import { postRun } from "../actions";
 import startLine from "../images/start-line.png";
 import runMarker from "../images/run-marker.png";
 
+import Button from "react-bootstrap/Button";
+
 class NewRunMap extends Component {
   state = {
     viewport: {
-      width: "60%",
+      width: "99%",
       height: "70%",
       latitude: 40.6708,
       longitude: -73.9645,
       zoom: 8
-    }
+    },
+    numResizes: 0
   };
 
   componentDidMount() {
@@ -30,8 +33,11 @@ class NewRunMap extends Component {
 
   resizeHandler = () => {
     this.viewportChangeHandler({
-      width: window.innerWidth * 0.6,
+      width: window.innerWidth * 0.99,
       height: window.innerHeight * 0.7
+    });
+    this.setState({
+      numResizes: this.state.numResizes + 1
     });
   };
 
@@ -65,24 +71,36 @@ class NewRunMap extends Component {
     return (
       <>
         <h1>Distance: {haversineSum(this.props.markers)} miles</h1>
-        <button onClick={_ => this.props.postRun(this.props.history)}>
-          Add to backend
-        </button>
-        <button onClick={_ => this.props.removeMarker()}>
-          Remove last point
-        </button>
-        <ReactMapGL
-          {...this.state.viewport}
-          onClick={e => {
-            this.props.addMarker(e.lngLat);
-          }}
-          mapOptions={{ style: "mapbox://styles/mapbox/streets-v10" }}
-          onViewportChange={viewport => this.viewportChangeHandler(viewport)}
-          mapboxApiAccessToken={process.env.REACT_APP_API_KEY}
-        >
-          {markerComps}
-          <PolylineOverlay points={this.props.markers} />
-        </ReactMapGL>
+        <Button onClick={_ => this.props.postRun(this.props.history)}>
+          Save Run
+        </Button>
+        {this.props.markers.length > 0 ? (
+          <Button onClick={_ => this.props.removeMarker()}>
+            Remove last point
+          </Button>
+        ) : null}
+
+        <div className="outer-map-wrapper">
+          <div className="inner-map-wrapper">
+            <ReactMapGL
+              {...this.state.viewport}
+              onClick={e => {
+                this.props.addMarker(e.lngLat);
+              }}
+              mapOptions={{ style: "mapbox://styles/mapbox/streets-v10" }}
+              onViewportChange={viewport =>
+                this.viewportChangeHandler(viewport)
+              }
+              mapboxApiAccessToken={process.env.REACT_APP_API_KEY}
+            >
+              {markerComps}
+              <PolylineOverlay
+                key={this.state.numResizes}
+                points={this.props.markers}
+              />
+            </ReactMapGL>
+          </div>
+        </div>
       </>
     );
   }

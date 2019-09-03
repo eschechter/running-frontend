@@ -22,8 +22,8 @@ import speedCalculator from "../HelperFunctions/speedCalculator";
 class DisplayRunMap extends Component {
   state = {
     viewport: {
-      width: "60%",
-      height: "70%",
+      width: window.innerWidth * 0.98,
+      height: window.innerHeight * 0.7,
       latitude: 40.6708,
       longitude: -73.9645,
       zoom: 8
@@ -46,8 +46,8 @@ class DisplayRunMap extends Component {
       const minLat = Math.min(...latitudes);
 
       const viewport = new WebMercatorViewport({
-        width: window.innerWidth * 0.59,
-        height: window.innerHeight * 0.69
+        width: window.innerWidth * 0.98,
+        height: window.innerHeight * 0.7
       });
       const bound = viewport.fitBounds([[minLong, minLat], [maxLong, maxLat]], {
         padding: 20,
@@ -61,9 +61,25 @@ class DisplayRunMap extends Component {
           zoom: bound.zoom
         }
       });
+      window.addEventListener("resize", this.resizeHandler);
     } else {
       this.props.history.push("/runs");
     }
+  }
+
+  resizeHandler = _ => {
+    this.setState({
+      numResizes: this.state.numResizes + 1,
+      viewport: {
+        ...this.state.viewport,
+        height: window.innerHeight * 0.7,
+        width: window.innerWidth * 0.98
+      }
+    });
+  };
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.resizeHandler);
   }
 
   render() {
@@ -96,6 +112,7 @@ class DisplayRunMap extends Component {
       const duration = this.props.displayedRun.completed
         ? moment.duration(this.props.displayedRun.duration * 1000)
         : null;
+      console.log(arrayMarkers);
 
       return (
         <>
@@ -115,17 +132,21 @@ class DisplayRunMap extends Component {
           )}
 
           <br />
-          <StaticMap
-            onResize={_ =>
-              this.setState({ numResizes: this.state.numResizes + 1 })
-            }
-            {...this.state.viewport}
-            mapOptions={{ style: "mapbox://styles/mapbox/streets-v10" }}
-            mapboxApiAccessToken={process.env.REACT_APP_API_KEY}
-          >
-            {markerComps}
-            <PolylineOverlay points={arrayMarkers} />
-          </StaticMap>
+          <div className="outer-map-wrapper">
+            <div className="inner-map-wrapper">
+              <StaticMap
+                {...this.state.viewport}
+                mapOptions={{ style: "mapbox://styles/mapbox/streets-v10" }}
+                mapboxApiAccessToken={process.env.REACT_APP_API_KEY}
+              >
+                {markerComps}
+                <PolylineOverlay
+                  key={this.state.numResizes}
+                  points={arrayMarkers}
+                />
+              </StaticMap>
+            </div>
+          </div>
         </>
       );
     } else {

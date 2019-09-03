@@ -22,3 +22,25 @@
   padding-bottom: 5px  
 
 }
+
+h1 {
+
+  margin-left: 10px;
+
+}
+
+h2 {
+  margin-left: 10px;
+}
+
+h3 {
+  margin-left: 10px;
+}
+
+.outer-map-wrapper {
+  text-align: center
+}
+
+.inner-map-wrapper {
+  display: inline-block
+}
