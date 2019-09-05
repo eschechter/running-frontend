@@ -1,8 +1,10 @@
 import haversineSum from "./HelperFunctions/haversineSum";
 
+const BASE_URL = "http://10.9.105.237";
+
 function loginUser(user, history) {
   return function(dispatch) {
-    fetch("http://localhost:3000/login", {
+    fetch(`${BASE_URL}:3000/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -21,13 +23,14 @@ function loginUser(user, history) {
           dispatch({ type: "LOGIN_USER", payload: data.user });
           localStorage.setItem("running-token", data.jwt);
         }
-      });
+      })
+      .catch(_ => alert("Could not connect to server"));
   };
 }
 
 function retrieveUser(token, history) {
   return function(dispatch) {
-    fetch("http://localhost:3000/retrieve-user", {
+    fetch(`${BASE_URL}:3000/retrieve-user`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -42,20 +45,21 @@ function retrieveUser(token, history) {
           alert("invalid token");
         else {
           if (
-            document.location.href === "http://localhost:3001/" ||
-            document.location.href === "http://localhost:3001/sign-up"
+            document.location.href === `${BASE_URL}:3001/` ||
+            document.location.href === `${BASE_URL}:3001/sign-up`
           ) {
             history.push("/runs");
           }
           dispatch({ type: "RETRIEVE_USER", payload: user });
         }
-      });
+      })
+      .catch(_ => alert("Could not connect to server"));
   };
 }
 
 function signUp(user, history) {
   return function(dispatch) {
-    fetch("http://localhost:3000/sign-up", {
+    fetch(`${BASE_URL}:3000/sign-up`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -74,13 +78,14 @@ function signUp(user, history) {
         history.push("/runs");
         localStorage.setItem("running-token", data.jwt);
         dispatch({ type: "SIGN_UP_USER", payload: data.user });
-      });
+      })
+      .catch(_ => alert("Could not connect to server"));
   };
 }
 
 function fetchRuns() {
   return function(dispatch, getState) {
-    fetch(`http://localhost:3000/users/${getState().user.id}/runs`)
+    fetch(`${BASE_URL}:3000/users/${getState().user.id}/runs`)
       .then(resp => resp.json())
       .then(runs => {
         dispatch({ type: "FETCH_RUNS", payload: runs });
@@ -93,7 +98,7 @@ function postRun(history) {
     if (getState().makeRunMarkers.length < 2) {
       alert("Your route must include at least two points");
     } else {
-      fetch("http://localhost:3000/runs", {
+      fetch(`${BASE_URL}:3000/runs`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -120,9 +125,37 @@ function postRun(history) {
   };
 }
 
+function fetchRequestSenders() {
+  return function(dispatch, getState) {
+    fetch(`${BASE_URL}:3000/users/${getState().user.id}/request-senders`)
+      .then(resp => resp.json())
+      .then(users =>
+        dispatch({ type: "FETCH_REQUEST_SENDERS", payload: users })
+      );
+  };
+}
+
+function fetchRequestReceivers() {
+  return function(dispatch, getState) {
+    fetch(`${BASE_URL}:3000/users/${getState().user.id}/request-receivers`)
+      .then(resp => resp.json())
+      .then(users =>
+        dispatch({ type: "FETCH_REQUEST_RECEIVERS", payload: users })
+      );
+  };
+}
+
+function fetchFriends() {
+  return function(dispatch, getState) {
+    fetch(`${BASE_URL}:3000/users/${getState().user.id}/friends`)
+      .then(resp => resp.json())
+      .then(users => dispatch({ type: "FETCH_FRIENDS", payload: users }));
+  };
+}
+
 function fetchDetailedRun(history, runId) {
   return function(dispatch) {
-    fetch(`http://localhost:3000/runs/${runId}`)
+    fetch(`${BASE_URL}:3000/runs/${runId}`)
       .then(resp => resp.json())
       .then(run => {
         dispatch({ type: "FETCH_DETAILED_RUN", payload: run });
@@ -135,7 +168,7 @@ function completeRun(duration) {
   return function(dispatch, getState) {
     console.log("patching");
 
-    fetch(`http://localhost:3000/runs/${getState().displayedRun.id}`, {
+    fetch(`${BASE_URL}:3000/runs/${getState().displayedRun.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -153,6 +186,70 @@ function completeRun(duration) {
   };
 }
 
+function searchUsers(searchTerm) {
+  return function(dispatch, getState) {
+    fetch(`${BASE_URL}:3000/users/${getState().user.id}/search/${searchTerm}`)
+      .then(resp => resp.json())
+      .then(friends => {
+        dispatch({ type: "SEARCH_USERS", payload: friends });
+      });
+  };
+}
+
+function requestFriend(friendUserId) {
+  return function(dispatch, getState) {
+    fetch(
+      `${BASE_URL}:3000/users/request/${getState().user.id}/${friendUserId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accepts: "application/json"
+        }
+      }
+    )
+      .then(resp => resp.json())
+      .then(user => {
+        dispatch({
+          type: "REMOVE_USER_FROM_SEARCH",
+          payload: user
+        });
+        dispatch({
+          type: "ADD_USER_TO_REQUESTED",
+          payload: user
+        });
+      });
+  };
+}
+
+function acceptFriendRequest(friendUserId) {
+  return function(dispatch, getState) {
+    fetch(
+      `${BASE_URL}:3000/users/complete_request/${
+        getState().user.id
+      }/${friendUserId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accepts: "application/json"
+        }
+      }
+    )
+      .then(resp => resp.json())
+      .then(user => {
+        dispatch({
+          type: "REMOVE_USER_FROM_SENDERS",
+          payload: user
+        });
+        dispatch({
+          type: "ADD_USER_TO_FRIENDS",
+          payload: user
+        });
+      });
+  };
+}
+
 export {
   loginUser,
   retrieveUser,
@@ -160,5 +257,11 @@ export {
   fetchRuns,
   postRun,
   fetchDetailedRun,
-  completeRun
+  completeRun,
+  fetchRequestSenders,
+  fetchRequestReceivers,
+  fetchFriends,
+  searchUsers,
+  requestFriend,
+  acceptFriendRequest
 };

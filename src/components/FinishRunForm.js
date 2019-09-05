@@ -6,6 +6,8 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 
+import Container from "react-bootstrap/Container";
+
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
@@ -21,66 +23,59 @@ class FinishRunForm extends Component {
 
   render() {
     return (
-      <Form
-        onSubmit={e => {
-          e.preventDefault();
-          this.props.completeRun(
-            this.state.hours * 3600 +
-              this.state.minutes * 60 +
-              Number.parseInt(this.state.seconds)
-          );
-        }}
-      >
-        <Form.Row>
-          <Col></Col>
-          <Col></Col>
+      <Container>
+        <Form
+          onSubmit={e => {
+            e.preventDefault();
+            this.props.completeRun(
+              this.state.hours * 3600 +
+                this.state.minutes * 60 +
+                Number.parseInt(this.state.seconds)
+            );
+          }}
+        >
+          <Form.Row>
+            <Col>
+              <Form.Label>Hours</Form.Label>
+              <Form.Control
+                onChange={this.changeHandler}
+                name="hours"
+                type="number"
+                min={0}
+                max={10}
+              />
+            </Col>
+            <Col>
+              <Form.Label>Minutes</Form.Label>
 
-          <Col>
-            <Form.Label>Hours</Form.Label>
-            <Form.Control
-              onChange={this.changeHandler}
-              name="hours"
-              type="number"
-              min={0}
-              max={10}
-            />
-          </Col>
-          <Col>
-            <Form.Label>Minutes</Form.Label>
+              <Form.Control
+                onChange={this.changeHandler}
+                name="minutes"
+                type="number"
+                min={0}
+                max={59}
+              />
+            </Col>
+            <Col>
+              <Form.Label>Seconds</Form.Label>
 
-            <Form.Control
-              onChange={this.changeHandler}
-              name="minutes"
-              type="number"
-              min={0}
-              max={59}
-            />
-          </Col>
-          <Col>
-            <Form.Label>Seconds</Form.Label>
-
-            <Form.Control
-              onChange={this.changeHandler}
-              name="seconds"
-              type="number"
-              min={0}
-              max={59}
-            />
-          </Col>
-          <Col></Col>
-          <Col></Col>
-        </Form.Row>
-        <br />
-        <Form.Row>
-          <Col></Col>
-          <Col></Col>
-          <Col>
-            <Button type="submit">Mark Run Complete</Button>
-          </Col>
-          <Col></Col>
-          <Col></Col>
-        </Form.Row>
-      </Form>
+              <Form.Control
+                onChange={this.changeHandler}
+                name="seconds"
+                type="number"
+                min={0}
+                max={59}
+              />
+            </Col>
+          </Form.Row>
+          <br />
+          <Form.Row>
+            <Col>
+              <Button type="submit">Mark Run Complete</Button>
+            </Col>
+          </Form.Row>
+        </Form>
+      </Container>
     );
   }
 }

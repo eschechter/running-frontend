@@ -22,3 +22,37 @@
   padding-bottom: 5px  
 
 }
+
+h1 {
+
+  margin-left: 10px;
+
+}
+
+h2 {
+  margin-left: 10px;
+}
+
+h3 {
+  margin-left: 10px;
+}
+
+.outer-map-wrapper {
+  text-align: center
+}
+
+.inner-map-wrapper {
+  display: inline-block
+}
+
+.new-map-button {
+  display: inline-block;
+  margin: 5px;
+  min-width: 160px;
+  max-width: 160px;
+  
+}
+
+#new-map-button-div {
+  text-align: center;
+}

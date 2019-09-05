@@ -27,7 +27,8 @@ class App extends Component {
           path="/runs"
           render={() => (
             <>
-              <NavBar /> <RunsContainer />
+              <NavBar />
+              <RunsContainer />
             </>
           )}
         />

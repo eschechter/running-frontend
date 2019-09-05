@@ -51,6 +51,7 @@ class Login extends Component {
                 <Form.Group>
                   <Form.Control
                     name="email"
+                    type="email"
                     placeholder="Enter your email address"
                     onChange={this.handleChange}
                     value={this.state.email}
