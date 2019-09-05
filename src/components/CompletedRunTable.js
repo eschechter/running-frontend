@@ -13,8 +13,10 @@ import { fetchDetailedRun } from "../actions";
 
 function CompletedRunTable(props) {
   const rows = props.runs.map((run, index) => (
-    <tr onClick={_ => props.fetchDetailedRun(props.history, run.id)}>
-      <td>{index + 1}</td>
+    <tr>
+      <td onClick={_ => props.fetchDetailedRun(props.history, run.id)}>
+        {index + 1}
+      </td>
       <td>{run.length}</td>
       <td>{parseTime(run.duration)}</td>
       <td>{speedCalculator(run.length, run.duration)}</td>

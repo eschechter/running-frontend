@@ -35,6 +35,13 @@ function NavBar(props) {
           >
             New Run
           </Nav.Link>
+          <Nav.Link
+            onClick={_ => {
+              props.history.push("/runs/friends");
+            }}
+          >
+            Friends
+          </Nav.Link>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

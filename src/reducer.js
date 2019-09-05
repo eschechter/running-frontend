@@ -4,7 +4,11 @@ const defaultState = {
   makeRunMarkers: [],
   runs: [],
   user: {},
-  displayedRun: {}
+  displayedRun: {},
+  searchedUsers: [],
+  sentFriendRequests: [],
+  receivedFriendRequests: [],
+  friends: []
 };
 
 function makeRunMarkersReducer(state = defaultState.makeRunMarkers, action) {
@@ -58,11 +62,67 @@ function currentRunReducer(state = defaultState.displayedRun, action) {
   }
 }
 
+function searchedUsersReducer(state = defaultState.searchedUsers, action) {
+  switch (action.type) {
+    case "SEARCH_USERS":
+      return action.payload;
+    case "REMOVE_USER_FROM_SEARCH":
+      return state.filter(user => user.id !== action.payload.id);
+    default:
+      return state;
+  }
+}
+
+function sentFriendRequestsReducer(
+  state = defaultState.sentFriendRequests,
+  action
+) {
+  switch (action.type) {
+    case "FETCH_REQUEST_RECEIVERS":
+      return action.payload;
+    case "ADD_USER_TO_REQUESTED":
+      console.log(action.payload);
+      return [...state, action.payload];
+    default:
+      return state;
+  }
+}
+
+function receivedFriendRequestsReducer(
+  state = defaultState.receivedFriendRequests,
+  action
+) {
+  switch (action.type) {
+    case "FETCH_REQUEST_SENDERS":
+      return action.payload;
+    case "REMOVE_USER_FROM_SENDERS":
+      return state.filter(user => user.id !== action.payload.id);
+    default:
+      return state;
+  }
+}
+
+function friendsReducer(state = defaultState.friends, action) {
+  switch (action.type) {
+    case "FETCH_FRIENDS":
+      return action.payload;
+    case "ADD_USER_TO_FRIENDS":
+      console.log(action.payload);
+      return [...state, action.payload];
+    default:
+      return state;
+  }
+}
+
 const appReducer = combineReducers({
   makeRunMarkers: makeRunMarkersReducer,
   runs: runsReducer,
   user: userReducer,
-  displayedRun: currentRunReducer
+  displayedRun: currentRunReducer,
+  searchedUsers: searchedUsersReducer,
+  sentFriendRequests: sentFriendRequestsReducer,
+  receivedFriendRequests: receivedFriendRequestsReducer,
+  friends: friendsReducer
 });
 
 const reducer = (state, action) => {

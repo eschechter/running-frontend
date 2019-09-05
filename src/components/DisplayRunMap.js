@@ -22,7 +22,7 @@ import speedCalculator from "../HelperFunctions/speedCalculator";
 class DisplayRunMap extends Component {
   state = {
     viewport: {
-      width: window.innerWidth * 0.98,
+      width: window.innerWidth * 0.97,
       height: window.innerHeight * 0.7,
       latitude: 40.6708,
       longitude: -73.9645,
@@ -46,7 +46,7 @@ class DisplayRunMap extends Component {
       const minLat = Math.min(...latitudes);
 
       const viewport = new WebMercatorViewport({
-        width: window.innerWidth * 0.98,
+        width: window.innerWidth * 0.97,
         height: window.innerHeight * 0.7
       });
       const bound = viewport.fitBounds([[minLong, minLat], [maxLong, maxLat]], {
@@ -73,7 +73,7 @@ class DisplayRunMap extends Component {
       viewport: {
         ...this.state.viewport,
         height: window.innerHeight * 0.7,
-        width: window.innerWidth * 0.98
+        width: window.innerWidth * 0.97
       }
     });
   };

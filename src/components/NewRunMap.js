@@ -13,11 +13,11 @@ import Button from "react-bootstrap/Button";
 class NewRunMap extends Component {
   state = {
     viewport: {
-      width: "99%",
+      width: "97%",
       height: "70%",
       latitude: 40.6708,
       longitude: -73.9645,
-      zoom: 8
+      zoom: 9
     },
     numResizes: 0
   };
@@ -25,6 +25,22 @@ class NewRunMap extends Component {
   componentDidMount() {
     window.addEventListener("resize", this.resizeHandler);
     this.resizeHandler();
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        resp => {
+          const { latitude, longitude } = resp.coords;
+          this.viewportChangeHandler({
+            latitude,
+            longitude,
+            zoom: 15
+          });
+        },
+        _ => alert("attempt to access location failed")
+      );
+    } else {
+      alert("could not access geolocation");
+    }
   }
 
   componentWillUnmount() {
@@ -48,7 +64,6 @@ class NewRunMap extends Component {
   }
 
   render() {
-    console.log(this.props.markers);
     let markerComps = [];
 
     for (let i = 0; i < this.props.markers.length; i++) {
@@ -71,15 +86,25 @@ class NewRunMap extends Component {
     return (
       <>
         <h1>Distance: {haversineSum(this.props.markers)} miles</h1>
-        <Button onClick={_ => this.props.postRun(this.props.history)}>
-          Save Run
-        </Button>
-        {this.props.markers.length > 0 ? (
-          <Button onClick={_ => this.props.removeMarker()}>
+        <div id="new-map-button-div">
+          <Button
+            className="new-map-button"
+            disabled={
+              this.state.formSubmitted || this.props.markers.length <= 1
+            }
+            onClick={_ => this.props.postRun(this.props.history)}
+          >
+            Save Run
+          </Button>
+
+          <Button
+            className="new-map-button"
+            onClick={_ => this.props.removeMarker()}
+            disabled={this.props.markers.length === 0}
+          >
             Remove last point
           </Button>
-        ) : null}
-
+        </div>
         <div className="outer-map-wrapper">
           <div className="inner-map-wrapper">
             <ReactMapGL

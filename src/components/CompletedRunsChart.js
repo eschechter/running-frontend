@@ -36,11 +36,13 @@ function CompletedRunsChart(props) {
   };
   return (
     <div>
-      <h2>Completed Runs (click a point to see details)</h2>
+      <h2>Completed Runs (click a point to see map)</h2>
       <Line
         onElementsClick={eles => {
-          const clickedRun = props.runs[eles[0]._index];
-          props.fetchDetailedRun(props.history, clickedRun.id);
+          if (eles[0]) {
+            const clickedRun = props.runs[eles[0]._index];
+            props.fetchDetailedRun(props.history, clickedRun.id);
+          }
         }}
         data={data}
       />
