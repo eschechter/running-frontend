@@ -2,9 +2,12 @@ import React, { Component } from "react";
 
 import { connect } from "react-redux";
 
-import { withRouter, Route } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 import CompletedRunTable from "./CompletedRunTable";
+import CompletedRunsChart from "./CompletedRunsChart";
+
+import { fetchDetailedRun } from "../actions";
 
 class FriendDetails extends Component {
   state = {
@@ -34,20 +37,24 @@ class FriendDetails extends Component {
     const pendingRuns = this.state.runs.filter(run => !run.completed);
 
     const pendingRunComps = pendingRuns.map(run => (
-      <li>{`Length: ${run.length} miles`}</li>
+      <li
+        onClick={_ =>
+          this.props.dispatch(fetchDetailedRun(this.props.history, run.id))
+        }
+      >{`Length: ${run.length} miles`}</li>
     ));
     return (
       <>
-        <h1>Friend details</h1>
+        <h1>Details for {this.props.friend.name}</h1>
         <ol>{pendingRunComps}</ol>
         <CompletedRunTable runs={completedRuns} />
+        <CompletedRunsChart runs={completedRuns} />
       </>
     );
   }
 }
 
 function msp(state) {
-  console.log(state);
   return {
     friend: state.selectedFriend,
     user: state.user

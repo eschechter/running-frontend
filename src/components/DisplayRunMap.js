@@ -116,7 +116,13 @@ class DisplayRunMap extends Component {
 
       return (
         <>
-          <h1>Distance: {haversineSum(arrayMarkers)} miles</h1>
+          {this.props.displayedRun.user_id === this.props.user.id ? (
+            <h1>{`${this.props.user.name}'s Run`}</h1>
+          ) : (
+            <h1>{`${this.props.possibleFriend.name}'s Run`}</h1>
+          )}
+
+          <h2>Distance: {haversineSum(arrayMarkers)} miles</h2>
           {this.props.displayedRun.completed ? (
             <>
               <h2>{`Time to complete: ${duration.hours()} hours, ${duration.minutes()} minutes, ${duration.seconds()} seconds`}</h2>
@@ -128,7 +134,12 @@ class DisplayRunMap extends Component {
               </h3>
             </>
           ) : (
-            <FinishRunForm />
+            <>
+              <h2>Currently Uncompleted</h2>
+              {this.props.displayedRun.user_id === this.props.user.id ? (
+                <FinishRunForm />
+              ) : null}
+            </>
           )}
 
           <br />
@@ -156,7 +167,9 @@ class DisplayRunMap extends Component {
 }
 function msp(state) {
   return {
-    displayedRun: state.displayedRun
+    displayedRun: state.displayedRun,
+    possibleFriend: state.selectedFriend,
+    user: state.user
   };
 }
 
