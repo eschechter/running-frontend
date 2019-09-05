@@ -8,7 +8,10 @@ const defaultState = {
   searchedUsers: [],
   sentFriendRequests: [],
   receivedFriendRequests: [],
-  friends: []
+  friends: [],
+  selectedFriend: {},
+  selectedFriendRun: {},
+  selectedFriendSelectedRun: {}
 };
 
 function makeRunMarkersReducer(state = defaultState.makeRunMarkers, action) {
@@ -114,6 +117,15 @@ function friendsReducer(state = defaultState.friends, action) {
   }
 }
 
+function selectedFriendReducer(state = defaultState.selectedFriend, action) {
+  switch (action.type) {
+    case "GET_FRIEND_DETAIL":
+      return action.payload;
+    default:
+      return state;
+  }
+}
+
 const appReducer = combineReducers({
   makeRunMarkers: makeRunMarkersReducer,
   runs: runsReducer,
@@ -122,7 +134,8 @@ const appReducer = combineReducers({
   searchedUsers: searchedUsersReducer,
   sentFriendRequests: sentFriendRequestsReducer,
   receivedFriendRequests: receivedFriendRequestsReducer,
-  friends: friendsReducer
+  friends: friendsReducer,
+  selectedFriend: selectedFriendReducer
 });
 
 const reducer = (state, action) => {

@@ -6,6 +6,7 @@ import { fetchRuns, fetchDetailedRun } from "../actions";
 import NewRunMap from "../components/NewRunMap";
 import DisplayRunMap from "../components/DisplayRunMap";
 import FriendRequestPage from "../components/FriendRequestPage";
+import FriendsContainer from "./FriendsContainer";
 import CompletedRunTable from "../components/CompletedRunTable";
 import CompletedRunsChart from "../components/CompletedRunsChart";
 
@@ -18,10 +19,11 @@ class RunsContainer extends Component {
 
   render() {
     const completedRuns = this.props.runs.filter(run => run.completed);
-    const pendingdRuns = this.props.runs.filter(run => !run.completed);
+    const pendingRuns = this.props.runs.filter(run => !run.completed);
 
-    const pendingdRunComps = pendingdRuns.map(run => (
+    const pendingRunComps = pendingRuns.map(run => (
       <li
+        key={run.id}
         onClick={_ =>
           this.props.dispatch(fetchDetailedRun(this.props.history, run.id))
         }
@@ -31,7 +33,11 @@ class RunsContainer extends Component {
     ));
     return (
       <>
-        <Route path="/runs/friends" render={() => <FriendRequestPage />} />
+        <Route
+          path="/runs/friend-requests"
+          render={() => <FriendRequestPage />}
+        />
+        <Route path="/runs/friends" render={() => <FriendsContainer />} />
         <Route path="/runs/new" render={() => <NewRunMap />} />
         <Route path="/runs/display" render={() => <DisplayRunMap />} />
         <Route
@@ -43,7 +49,7 @@ class RunsContainer extends Component {
 
               <h2>Planned Runs (click text to see map) </h2>
 
-              <ol>{pendingdRunComps}</ol>
+              <ol>{pendingRunComps}</ol>
               <br />
               <h2>Completed Runs (click number in left column to see map)</h2>
               <CompletedRunTable runs={completedRuns} />

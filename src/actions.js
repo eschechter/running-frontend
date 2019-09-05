@@ -1,6 +1,6 @@
 import haversineSum from "./HelperFunctions/haversineSum";
 
-const BASE_URL = "http://10.9.105.237";
+const BASE_URL = "http://localhost";
 
 function loginUser(user, history) {
   return function(dispatch) {
@@ -24,7 +24,9 @@ function loginUser(user, history) {
           localStorage.setItem("running-token", data.jwt);
         }
       })
-      .catch(_ => alert("Could not connect to server"));
+      .catch(_ => {
+        alert("Could not connect to server");
+      });
   };
 }
 
@@ -53,7 +55,10 @@ function retrieveUser(token, history) {
           dispatch({ type: "RETRIEVE_USER", payload: user });
         }
       })
-      .catch(_ => alert("Could not connect to server"));
+      .catch(_ => {
+        alert("Could not connect to server");
+        history.push("/");
+      });
   };
 }
 
@@ -159,7 +164,7 @@ function fetchDetailedRun(history, runId) {
       .then(resp => resp.json())
       .then(run => {
         dispatch({ type: "FETCH_DETAILED_RUN", payload: run });
-        history.push("/runs/display");
+        history.push(`/runs/display/${runId}`);
       });
   };
 }
@@ -240,10 +245,6 @@ function acceptFriendRequest(friendUserId) {
       .then(user => {
         dispatch({
           type: "REMOVE_USER_FROM_SENDERS",
-          payload: user
-        });
-        dispatch({
-          type: "ADD_USER_TO_FRIENDS",
           payload: user
         });
       });

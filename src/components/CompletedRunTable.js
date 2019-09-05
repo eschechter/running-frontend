@@ -13,7 +13,7 @@ import { fetchDetailedRun } from "../actions";
 
 function CompletedRunTable(props) {
   const rows = props.runs.map((run, index) => (
-    <tr>
+    <tr key={run.id}>
       <td onClick={_ => props.fetchDetailedRun(props.history, run.id)}>
         {index + 1}
       </td>

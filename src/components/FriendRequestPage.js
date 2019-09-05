@@ -8,8 +8,7 @@ import {
   fetchRequestSenders,
   fetchRequestReceivers,
   requestFriend,
-  acceptFriendRequest,
-  fetchFriends
+  acceptFriendRequest
 } from "../actions";
 
 class FriendRequestPage extends Component {
@@ -17,7 +16,6 @@ class FriendRequestPage extends Component {
     if (prevProps.user.id !== this.props.user.id) {
       this.props.fetchRequestSenders();
       this.props.fetchRequestReceivers();
-      this.props.fetchFriends();
       this.props.searchUsers();
     }
   }
@@ -26,7 +24,6 @@ class FriendRequestPage extends Component {
     if (this.props.user.id) {
       this.props.fetchRequestSenders();
       this.props.fetchRequestReceivers();
-      this.props.fetchFriends();
       this.props.searchUsers();
     }
   }
@@ -55,11 +52,7 @@ class FriendRequestPage extends Component {
         Name: {user.name}, Email: {user.email}{" "}
       </li>
     ));
-    const friendComps = this.props.friends.map(user => (
-      <li>
-        Name: {user.name}, Email: {user.email}{" "}
-      </li>
-    ));
+
     return (
       <>
         <h2>
@@ -71,8 +64,6 @@ class FriendRequestPage extends Component {
         {requestReceiverComps}
         <h2>Received requests:</h2>
         {requestSenderComps}
-        <h2>Friends:</h2>
-        {friendComps}
       </>
     );
   }
@@ -85,8 +76,7 @@ function msp(state) {
     user: state.user,
     users: state.searchedUsers,
     receivedFriendRequests: state.receivedFriendRequests,
-    sentFriendRequests: state.sentFriendRequests,
-    friends: state.friends
+    sentFriendRequests: state.sentFriendRequests
   };
 }
 
@@ -96,7 +86,6 @@ function mdp(dispatch) {
     acceptFriendRequest: userId => dispatch(acceptFriendRequest(userId)),
     fetchRequestSenders: () => dispatch(fetchRequestSenders()),
     fetchRequestReceivers: () => dispatch(fetchRequestReceivers()),
-    fetchFriends: () => dispatch(fetchFriends()),
     searchUsers: () => dispatch(searchUsers())
   };
 }
