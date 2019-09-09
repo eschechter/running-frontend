@@ -28,7 +28,6 @@ class RunsContainer extends Component {
   }
 
   render() {
-    console.log(this.props.runs);
     const completedRuns = this.props.runs.filter(run => run.completed);
     const pendingRuns = this.props.runs.filter(run => !run.completed);
 

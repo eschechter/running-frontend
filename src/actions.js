@@ -1,10 +1,10 @@
 import haversineSum from "./HelperFunctions/haversineSum";
 
-const BASE_URL = "http://localhost";
+const BASE_URL = "http://running-mate-backend.herokuapp.com";
 
 function loginUser(user, history) {
   return function(dispatch) {
-    fetch(`${BASE_URL}:3000/login`, {
+    fetch(`${BASE_URL}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -32,7 +32,7 @@ function loginUser(user, history) {
 
 function retrieveUser(token, history) {
   return function(dispatch) {
-    fetch(`${BASE_URL}:3000/retrieve-user`, {
+    fetch(`${BASE_URL}/retrieve-user`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -47,8 +47,8 @@ function retrieveUser(token, history) {
           alert("invalid token");
         else {
           if (
-            document.location.href === `${BASE_URL}:3001/` ||
-            document.location.href === `${BASE_URL}:3001/sign-up`
+            document.location.href === "running-mate.herokuapp.com" ||
+            document.location.href === "running-mate.herokuapp.com/sign-up"
           ) {
             history.push("/homepage");
           }
@@ -64,7 +64,7 @@ function retrieveUser(token, history) {
 
 function signUp(user, history) {
   return function(dispatch) {
-    fetch(`${BASE_URL}:3000/sign-up`, {
+    fetch(`${BASE_URL}/sign-up`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -90,7 +90,7 @@ function signUp(user, history) {
 
 function fetchRuns() {
   return function(dispatch, getState) {
-    fetch(`${BASE_URL}:3000/users/${getState().user.id}/runs`)
+    fetch(`${BASE_URL}/users/${getState().user.id}/runs`)
       .then(resp => resp.json())
       .then(runs => {
         dispatch({ type: "FETCH_RUNS", payload: runs });
@@ -103,7 +103,7 @@ function postRun(history) {
     if (getState().makeRunMarkers.length < 2) {
       alert("Your route must include at least two points");
     } else {
-      fetch(`${BASE_URL}:3000/runs`, {
+      fetch(`${BASE_URL}/runs`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -120,7 +120,6 @@ function postRun(history) {
       })
         .then(resp => resp.json())
         .then(run => {
-          console.log("detailed run", run);
           dispatch({ type: "CLEAR_MARKERS" });
           dispatch({ type: "ADD_RUN", payload: run });
           dispatch({ type: "FETCH_DETAILED_RUN", payload: run });
@@ -132,7 +131,7 @@ function postRun(history) {
 
 function postFriendRun(history) {
   return function(dispatch, getState) {
-    fetch(`${BASE_URL}:3000/runs`, {
+    fetch(`${BASE_URL}/runs`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -149,8 +148,6 @@ function postFriendRun(history) {
     })
       .then(resp => resp.json())
       .then(run => {
-        console.log(run);
-
         dispatch({ type: "ADD_RUN", payload: run });
         dispatch({ type: "FETCH_DETAILED_RUN", payload: run });
         history.push("/runs/display");
@@ -159,7 +156,7 @@ function postFriendRun(history) {
 }
 function fetchRequestSenders() {
   return function(dispatch, getState) {
-    fetch(`${BASE_URL}:3000/users/${getState().user.id}/request-senders`)
+    fetch(`${BASE_URL}/users/${getState().user.id}/request-senders`)
       .then(resp => resp.json())
       .then(users =>
         dispatch({ type: "FETCH_REQUEST_SENDERS", payload: users })
@@ -169,7 +166,7 @@ function fetchRequestSenders() {
 
 function fetchRequestReceivers() {
   return function(dispatch, getState) {
-    fetch(`${BASE_URL}:3000/users/${getState().user.id}/request-receivers`)
+    fetch(`${BASE_URL}/users/${getState().user.id}/request-receivers`)
       .then(resp => resp.json())
       .then(users =>
         dispatch({ type: "FETCH_REQUEST_RECEIVERS", payload: users })
@@ -179,7 +176,7 @@ function fetchRequestReceivers() {
 
 function fetchFriends() {
   return function(dispatch, getState) {
-    fetch(`${BASE_URL}:3000/users/${getState().user.id}/friends`)
+    fetch(`${BASE_URL}/users/${getState().user.id}/friends`)
       .then(resp => resp.json())
       .then(users => dispatch({ type: "FETCH_FRIENDS", payload: users }));
   };
@@ -187,7 +184,7 @@ function fetchFriends() {
 
 function fetchDetailedRun(history, runId) {
   return function(dispatch) {
-    fetch(`${BASE_URL}:3000/runs/${runId}`)
+    fetch(`${BASE_URL}/runs/${runId}`)
       .then(resp => resp.json())
       .then(run => {
         dispatch({ type: "FETCH_DETAILED_RUN", payload: run });
@@ -198,9 +195,7 @@ function fetchDetailedRun(history, runId) {
 
 function completeRun(duration) {
   return function(dispatch, getState) {
-    console.log("patching");
-
-    fetch(`${BASE_URL}:3000/runs/${getState().displayedRun.id}`, {
+    fetch(`${BASE_URL}/runs/${getState().displayedRun.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -220,7 +215,7 @@ function completeRun(duration) {
 
 function searchUsers(searchTerm) {
   return function(dispatch, getState) {
-    fetch(`${BASE_URL}:3000/users/${getState().user.id}/search/${searchTerm}`)
+    fetch(`${BASE_URL}/users/${getState().user.id}/search/${searchTerm}`)
       .then(resp => resp.json())
       .then(friends => {
         dispatch({ type: "SEARCH_USERS", payload: friends });
@@ -230,16 +225,13 @@ function searchUsers(searchTerm) {
 
 function requestFriend(friendUserId) {
   return function(dispatch, getState) {
-    fetch(
-      `${BASE_URL}:3000/users/request/${getState().user.id}/${friendUserId}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accepts: "application/json"
-        }
+    fetch(`${BASE_URL}/users/request/${getState().user.id}/${friendUserId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accepts: "application/json"
       }
-    )
+    })
       .then(resp => resp.json())
       .then(user => {
         dispatch({
@@ -258,7 +250,7 @@ function requestFriend(friendUserId) {
 function acceptFriendRequest(friendUserId) {
   return function(dispatch, getState) {
     fetch(
-      `${BASE_URL}:3000/users/complete_request/${
+      `${BASE_URL}/users/complete_request/${
         getState().user.id
       }/${friendUserId}`,
       {

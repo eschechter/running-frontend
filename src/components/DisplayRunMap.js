@@ -117,8 +117,6 @@ class DisplayRunMap extends Component {
       const duration = this.props.displayedRun.completed
         ? moment.duration(this.props.displayedRun.duration * 1000)
         : null;
-      console.log(arrayMarkers);
-
       return (
         <>
           <br />

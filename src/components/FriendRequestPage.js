@@ -112,7 +112,6 @@ class FriendRequestPage extends Component {
 }
 
 function msp(state) {
-  console.log(state.searchedUsers);
   return {
     user: state.user,
     users: state.searchedUsers,

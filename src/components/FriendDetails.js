@@ -36,7 +36,6 @@ class FriendDetails extends Component {
     }
   }
   render() {
-    console.log(this.state);
     const completedRuns = this.state.runs.filter(run => run.completed);
     const pendingRuns = this.state.runs.filter(run => !run.completed);
 
@@ -65,8 +64,17 @@ class FriendDetails extends Component {
         <div className="column-wrapper">
           <CardColumns>{pendingRunComps}</CardColumns>
         </div>
-        <CompletedRunTable runs={completedRuns} />
-        <CompletedRunsChart runs={completedRuns} />
+        <br />
+        {completedRuns.length >= 1 ? (
+          <>
+            <h2>Completed Runs (click city in left column to see map)</h2>
+            <CompletedRunTable runs={completedRuns} />
+          </>
+        ) : null}
+        <br />
+        {completedRuns.length >= 3 ? (
+          <CompletedRunsChart runs={completedRuns} />
+        ) : null}
       </>
     );
   }

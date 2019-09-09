@@ -85,7 +85,6 @@ function sentFriendRequestsReducer(
     case "FETCH_REQUEST_RECEIVERS":
       return action.payload;
     case "ADD_USER_TO_REQUESTED":
-      console.log(action.payload);
       return [...state, action.payload];
     default:
       return state;
@@ -111,7 +110,6 @@ function friendsReducer(state = defaultState.friends, action) {
     case "FETCH_FRIENDS":
       return action.payload;
     case "ADD_USER_TO_FRIENDS":
-      console.log(action.payload);
       return [...state, action.payload];
     default:
       return state;
