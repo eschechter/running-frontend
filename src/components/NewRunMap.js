@@ -69,6 +69,7 @@ class NewRunMap extends Component {
 
   render() {
     let markerComps = [];
+    console.log(process.env);
 
     for (let i = 0; i < this.props.markers.length; i++) {
       markerComps.push(
