@@ -126,7 +126,7 @@ class NewRunMap extends Component {
               onViewportChange={viewport =>
                 this.viewportChangeHandler(viewport)
               }
-              mapboxApiAccessToken={process.env.REACT_APP_API_KEY}
+              mapboxApiAccessToken={process.env.API_KEY}
             >
               {markerComps}
               <PolylineOverlay

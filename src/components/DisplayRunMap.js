@@ -173,7 +173,7 @@ class DisplayRunMap extends Component {
               <StaticMap
                 {...this.state.viewport}
                 mapOptions={{ style: "mapbox://styles/mapbox/streets-v10" }}
-                mapboxApiAccessToken={process.env.REACT_APP_API_KEY}
+                mapboxApiAccessToken={process.env.API_KEY}
               >
                 {markerComps}
                 <PolylineOverlay
