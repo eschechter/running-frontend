@@ -1,6 +1,6 @@
 import haversineSum from "./HelperFunctions/haversineSum";
 
-const BASE_URL = "http://running-mate-backend.herokuapp.com";
+const BASE_URL = "https://running-mate-backend.herokuapp.com";
 
 function loginUser(user, history) {
   return function(dispatch) {
