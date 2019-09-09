@@ -12,10 +12,10 @@ import speedCalculator from "../HelperFunctions/speedCalculator";
 import { fetchDetailedRun } from "../actions";
 
 function CompletedRunTable(props) {
-  const rows = props.runs.map((run, index) => (
+  const rows = props.runs.map(run => (
     <tr key={run.id}>
       <td onClick={_ => props.fetchDetailedRun(props.history, run.id)}>
-        {index + 1}
+        {run.city}
       </td>
       <td>{run.length}</td>
       <td>{parseTime(run.duration)}</td>
@@ -27,7 +27,7 @@ function CompletedRunTable(props) {
     <Table striped bordered hover>
       <thead>
         <tr>
-          <th>Completed Runs</th>
+          <th>City</th>
           <th>Distance (miles)</th>
           <th>Time (HH:MM:SS)</th>
           <th>Speed (mph) </th>

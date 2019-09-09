@@ -19,7 +19,7 @@ function loginUser(user, history) {
         if (data.message === "Invalid email or password")
           alert("invalid email or password");
         else {
-          history.push("/runs");
+          history.push("/homepage");
           dispatch({ type: "LOGIN_USER", payload: data.user });
           localStorage.setItem("running-token", data.jwt);
         }
@@ -50,7 +50,7 @@ function retrieveUser(token, history) {
             document.location.href === `${BASE_URL}:3001/` ||
             document.location.href === `${BASE_URL}:3001/sign-up`
           ) {
-            history.push("/runs");
+            history.push("/homepage");
           }
           dispatch({ type: "RETRIEVE_USER", payload: user });
         }
@@ -80,7 +80,7 @@ function signUp(user, history) {
     })
       .then(res => res.json())
       .then(data => {
-        history.push("/runs");
+        history.push("/homepage");
         localStorage.setItem("running-token", data.jwt);
         dispatch({ type: "SIGN_UP_USER", payload: data.user });
       })
@@ -130,6 +130,33 @@ function postRun(history) {
   };
 }
 
+function postFriendRun(history) {
+  return function(dispatch, getState) {
+    fetch(`${BASE_URL}:3000/runs`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        run: {
+          user_id: getState().user.id,
+          coordinates: getState().displayedRun.coordinates.map(point => {
+            return { longitude: point.x, latitude: point.y };
+          }),
+          length: getState().displayedRun.length
+        }
+      })
+    })
+      .then(resp => resp.json())
+      .then(run => {
+        console.log(run);
+
+        dispatch({ type: "ADD_RUN", payload: run });
+        dispatch({ type: "FETCH_DETAILED_RUN", payload: run });
+        history.push("/runs/display");
+      });
+  };
+}
 function fetchRequestSenders() {
   return function(dispatch, getState) {
     fetch(`${BASE_URL}:3000/users/${getState().user.id}/request-senders`)
@@ -223,6 +250,7 @@ function requestFriend(friendUserId) {
           type: "ADD_USER_TO_REQUESTED",
           payload: user
         });
+        dispatch({ type: "ENABLE_BUTTONS" });
       });
   };
 }
@@ -234,7 +262,7 @@ function acceptFriendRequest(friendUserId) {
         getState().user.id
       }/${friendUserId}`,
       {
-        method: "POST",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           Accepts: "application/json"
@@ -247,6 +275,7 @@ function acceptFriendRequest(friendUserId) {
           type: "REMOVE_USER_FROM_SENDERS",
           payload: user
         });
+        dispatch({ type: "ENABLE_BUTTONS" });
       });
   };
 }
@@ -264,5 +293,6 @@ export {
   fetchFriends,
   searchUsers,
   requestFriend,
-  acceptFriendRequest
+  acceptFriendRequest,
+  postFriendRun
 };

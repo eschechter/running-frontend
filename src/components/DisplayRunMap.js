@@ -19,6 +19,10 @@ import FinishRunForm from "./FinishRunForm";
 
 import speedCalculator from "../HelperFunctions/speedCalculator";
 
+import { postFriendRun } from "../actions";
+
+import Button from "react-bootstrap/Button";
+
 class DisplayRunMap extends Component {
   state = {
     viewport: {
@@ -28,7 +32,8 @@ class DisplayRunMap extends Component {
       longitude: -73.9645,
       zoom: 8
     },
-    numResizes: 0
+    numResizes: 0,
+    formSubmitted: false
   };
 
   componentDidMount() {
@@ -116,16 +121,26 @@ class DisplayRunMap extends Component {
 
       return (
         <>
+          <br />
           {this.props.displayedRun.user_id === this.props.user.id ? (
-            <h1>{`${this.props.user.name}'s Run`}</h1>
+            <>
+              <h1>My Run</h1>
+              <hr />
+            </>
           ) : (
-            <h1>{`${this.props.possibleFriend.name}'s Run`}</h1>
+            <>
+              <h1>{`${this.props.possibleFriend.name}'s Run`}</h1>
+              <hr />
+            </>
           )}
 
           <h2>Distance: {haversineSum(arrayMarkers)} miles</h2>
+          <hr />
+
           {this.props.displayedRun.completed ? (
             <>
               <h2>{`Time to complete: ${duration.hours()} hours, ${duration.minutes()} minutes, ${duration.seconds()} seconds`}</h2>
+              <hr />
               <h3>
                 {`Speed: ${speedCalculator(
                   this.props.displayedRun.length,
@@ -136,11 +151,23 @@ class DisplayRunMap extends Component {
           ) : (
             <>
               <h2>Currently Uncompleted</h2>
+              <hr />
               {this.props.displayedRun.user_id === this.props.user.id ? (
                 <FinishRunForm />
               ) : null}
             </>
           )}
+          {this.props.displayedRun.user_id !== this.props.user.id ? (
+            <Button
+              disabled={this.state.formSubmitted}
+              onClick={_ => {
+                this.setState({ formSubmitted: true });
+                this.props.postRun(this.props.history);
+              }}
+            >
+              Copy this run for yourself!
+            </Button>
+          ) : null}
 
           <br />
           <div className="outer-map-wrapper">
@@ -173,9 +200,15 @@ function msp(state) {
   };
 }
 
+function mdp(dispatch) {
+  return {
+    postRun: history => dispatch(postFriendRun(history))
+  };
+}
+
 export default withRouter(
   connect(
     msp,
-    null
+    mdp
   )(DisplayRunMap)
 );

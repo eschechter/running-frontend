@@ -7,6 +7,7 @@ import RunsContainer from "./containers/RunsContainer";
 import { retrieveUser } from "./actions";
 import { connect } from "react-redux";
 import NavBar from "./components/NavBar";
+import LandingPage from "./components/LandingPage";
 
 class App extends Component {
   componentDidMount() {
@@ -20,7 +21,7 @@ class App extends Component {
 
   render() {
     return (
-      <div id="app">
+      <>
         <Route exact path="/" render={() => <Login />} />
         <Route path="/sign-up" render={() => <SignUp />} />
         <Route
@@ -32,7 +33,15 @@ class App extends Component {
             </>
           )}
         />
-      </div>
+        <Route
+          path="/homepage"
+          render={() => (
+            <>
+              <LandingPage />
+            </>
+          )}
+        />
+      </>
     );
   }
 }

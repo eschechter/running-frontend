@@ -5,8 +5,10 @@ import { connect } from "react-redux";
 import { withRouter, Route } from "react-router-dom";
 
 import Card from "react-bootstrap/Card";
-import CardColumns from "react-bootstrap/CardColumns";
 import ListGroup from "react-bootstrap/ListGroup";
+// import CardDeck from "react-bootstrap/CardDeck";
+import CardColumns from "react-bootstrap/CardColumns";
+import Button from "react-bootstrap/Button";
 
 import { fetchFriends } from "../actions";
 
@@ -32,12 +34,7 @@ class FriendsContainer extends Component {
 
   render() {
     const friendsComps = this.props.friends.map(user => (
-      <Card
-        onClick={_ => this.userClickHandler(user)}
-        bg="primary"
-        text="black"
-        style={{ width: "18rem" }}
-      >
+      <Card bg="primary" text="black" style={{ width: "18rem" }}>
         <Card.Body>
           <Card.Title>{user.name}</Card.Title>
           <Card.Subtitle>{user.email}</Card.Subtitle>
@@ -48,6 +45,13 @@ class FriendsContainer extends Component {
             Completed Runs: {user.runs.filter(run => run.completed).length}
           </ListGroup.Item>
         </ListGroup>
+        <Button
+          className="btn-block"
+          onClick={_ => this.userClickHandler(user)}
+          variant="primary"
+        >
+          See details
+        </Button>
       </Card>
     ));
 
@@ -58,8 +62,11 @@ class FriendsContainer extends Component {
           path="/runs/friends"
           render={() => (
             <>
+              <br />
               <h1>My friends</h1>
-              <CardColumns>{friendsComps}</CardColumns>
+              <div className="column-wrapper">
+                <CardColumns>{friendsComps}</CardColumns>
+              </div>
             </>
           )}
         />

@@ -10,6 +10,12 @@ import { fetchDetailedRun } from "../actions";
 function CompletedRunsChart(props) {
   const data = {
     labels: props.runs.map((_, index) => index + 1),
+    options: {
+      left: 10,
+      right: 10,
+      top: 10,
+      bottom: 10
+    },
     datasets: [
       {
         label: "Speed in mph across runs",
@@ -36,7 +42,7 @@ function CompletedRunsChart(props) {
   };
   return (
     <div>
-      <h2>Completed Runs (click a point to see map)</h2>
+      <h2>Speed chart (click a point to see map)</h2>
       <Line
         onElementsClick={eles => {
           if (eles[0]) {

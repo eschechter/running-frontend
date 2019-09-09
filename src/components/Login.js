@@ -26,14 +26,13 @@ class Login extends Component {
   render() {
     return (
       <div className="login-background">
-        <Container id="white-background">
+        <Container id="login-white-background">
           <Row>
             <Col>
               <br />
-              <h1>App Name</h1>
-              <br />
-
+              <h1 className="logo">Running Mate</h1>
               <h2>Sign In</h2>
+              <br />
               <Form
                 onSubmit={e => {
                   e.preventDefault();

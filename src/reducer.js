@@ -11,7 +11,8 @@ const defaultState = {
   friends: [],
   selectedFriend: {},
   selectedFriendRun: {},
-  selectedFriendSelectedRun: {}
+  selectedFriendSelectedRun: {},
+  disableRequestButtons: false
 };
 
 function makeRunMarkersReducer(state = defaultState.makeRunMarkers, action) {
@@ -126,6 +127,20 @@ function selectedFriendReducer(state = defaultState.selectedFriend, action) {
   }
 }
 
+function disableRequestButtonsReducer(
+  state = defaultState.disableRequestButtons,
+  action
+) {
+  switch (action.type) {
+    case "DISABLE_BUTTONS":
+      return true;
+    case "ENABLE_BUTTONS":
+      return false;
+    default:
+      return state;
+  }
+}
+
 const appReducer = combineReducers({
   makeRunMarkers: makeRunMarkersReducer,
   runs: runsReducer,
@@ -135,7 +150,8 @@ const appReducer = combineReducers({
   sentFriendRequests: sentFriendRequestsReducer,
   receivedFriendRequests: receivedFriendRequestsReducer,
   friends: friendsReducer,
-  selectedFriend: selectedFriendReducer
+  selectedFriend: selectedFriendReducer,
+  disableRequestButtons: disableRequestButtonsReducer
 });
 
 const reducer = (state, action) => {

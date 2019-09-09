@@ -1,48 +1,154 @@
+
+
+#app {
+  height: 100%;
+}
+
+
+
+#login-white-background{
+  background: #E0EAFC;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #CFDEF3, #E0EAFC);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  margin-top: 20%;
+  margin-bottom: 20%;
+  border-radius: 10px;
+  text-align: center;
+  padding-bottom: 10px;
+  padding-top: 10px; 
+
+}
+
+@media screen and (min-width: 800px) {
+  #login-white-background {
+   margin-top: 5%;
+   min-width: 50%;
+   max-width: 50%;
+   display: inline-block;
+ }
+}
+
+@media screen and (max-width: 800px) {
+  #login-white-background {
+    min-width: 90%;
+    max-width: 90%;
+   margin-left: 5%;
+   margin-right: 5%;
+ }
+}
+
+#white-background{
+  background: #ADA996;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #EAEAEA, #DBDBDB, #F2F2F2, #ADA996);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #EAEAEA, #DBDBDB, #F2F2F2, #ADA996); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  
+  margin-top: 20%;
+  margin-bottom: 20%;
+  border-radius: 10px;
+  text-align: center;
+  padding-bottom: 10px;
+  padding-top: 10px; 
+
+}
+
+.logo{
+  font-family: 'Monoton', cursive;
+}
+
+
+
+
+@media screen and (min-width: 800px) {
+  #white-background {
+      margin-top: 5%;
+
+   min-width: 50%;
+   max-width: 50%;
+   display: inline-block;
+ }
+}
+
+@media screen and (max-width: 800px) {
+  #white-background {
+    min-width: 90%;
+    max-width: 90%;
+   margin-left: 5%;
+   margin-right: 5%;
+ }
+}
+
+#landing-page {
+  background-image: url('./images/horseshoe.png'); 
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100%; 
+  max-height: 100%; 
+  overflow: auto;
+  text-align: center;
+}
+
 .login-background {
   background-image: url('./images/background.png');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
   min-height: 100%; 
+  max-height: 100%; 
   overflow: auto;
-
-}
-
-#app {
-  height: 100%;
-  overflow: auto;
-}
-
-#white-background{
-  background: white;
-  
-  margin-top: 10%;
-  border-radius: 10px;
   text-align: center;
-  padding-bottom: 5px  
 
 }
+
+/* @media screen and (min-width: 800px) {
+  #landing-page{
+    margin-bottom: 
+  }
+}
+
+@media screen and (min-width: 800px) {
+  .login-background{
+  } */
+/* } */
 
 h1 {
 
   margin-left: 10px;
+  margin-right: 10px;
 
 }
 
 h2 {
   margin-left: 10px;
+  margin-right: 10px;
 }
 
 h3 {
   margin-left: 10px;
+  margin-right: 10px;
 }
 
 .outer-map-wrapper {
-  text-align: center
+  text-align: center;
+  height: 90%;
 }
 
 .inner-map-wrapper {
   display: inline-block
+}
+
+button {
+  cursor: pointer
+}
+
+.header-link {
+  cursor: pointer;
+}
+
+.navbar-brand {
+    cursor: pointer;
+
 }
 
 .new-map-button {
@@ -56,3 +162,40 @@ h3 {
 #new-map-button-div {
   text-align: center;
 }
+
+
+.card {
+  margin: 20px auto;
+  max-width: 250px;
+}
+
+.card-body{
+  text-align: left;
+}
+
+.column-wrapper{
+text-align: center;
+}
+
+.card-columns {
+  display: inline-block
+}
+
+.column-wrapper {
+  text-align: center
+}
+
+@media screen and (min-width: 800px) {
+  #runs-container {
+    margin: 1%;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  #app {
+    overflow-x: hidden
+
+  }
+}
+
+

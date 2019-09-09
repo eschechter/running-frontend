@@ -14,12 +14,13 @@ class NewRunMap extends Component {
   state = {
     viewport: {
       width: "97%",
-      height: "70%",
+      height: "75%",
       latitude: 40.6708,
       longitude: -73.9645,
       zoom: 9
     },
-    numResizes: 0
+    numResizes: 0,
+    formSubmitted: false
   };
 
   componentDidMount() {
@@ -36,10 +37,10 @@ class NewRunMap extends Component {
             zoom: 15
           });
         },
-        _ => alert("attempt to access location failed")
+        _ => alert("Attempt to access location failed.")
       );
     } else {
-      alert("could not access geolocation");
+      alert("Could not access geolocation.");
     }
   }
 
@@ -48,9 +49,12 @@ class NewRunMap extends Component {
   }
 
   resizeHandler = () => {
-    this.viewportChangeHandler({
-      width: window.innerWidth * 0.99,
-      height: window.innerHeight * 0.7
+    this.setState({
+      viewport: {
+        ...this.state.viewport,
+        width: window.innerWidth * 0.99,
+        height: window.innerHeight * 0.75
+      }
     });
     this.setState({
       numResizes: this.state.numResizes + 1
@@ -85,6 +89,7 @@ class NewRunMap extends Component {
     }
     return (
       <>
+        <br />
         <h1>Distance: {haversineSum(this.props.markers)} miles</h1>
         <div id="new-map-button-div">
           <Button
@@ -92,7 +97,10 @@ class NewRunMap extends Component {
             disabled={
               this.state.formSubmitted || this.props.markers.length <= 1
             }
-            onClick={_ => this.props.postRun(this.props.history)}
+            onClick={_ => {
+              this.setState({ formSubmitted: true });
+              this.props.postRun(this.props.history);
+            }}
           >
             Save Run
           </Button>
@@ -105,9 +113,11 @@ class NewRunMap extends Component {
             Remove last point
           </Button>
         </div>
+        <br />
         <div className="outer-map-wrapper">
           <div className="inner-map-wrapper">
             <ReactMapGL
+              minZoom={9}
               {...this.state.viewport}
               onClick={e => {
                 this.props.addMarker(e.lngLat);

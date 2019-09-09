@@ -13,7 +13,8 @@ class SignUp extends Component {
   state = {
     name: "",
     email: "",
-    password: ""
+    password: "",
+    formSubmitted: false
   };
 
   isStateValid = () => {
@@ -27,78 +28,21 @@ class SignUp extends Component {
     });
   };
 
-  // render() {
-  //   return (
-  //     <div>
-  //       <br />
-  //       <h1>Sign Up</h1>
-  //       <br />
-  //       <Form
-  //         onSubmit={e => {
-  //           e.preventDefault();
-  //           this.props.dispatch(
-  //             signUp(
-  //               {
-  //                 email: this.state.email,
-  //                 password: this.state.password,
-  //                 name: this.state.name
-  //               },
-  //               this.props.history
-  //             )
-  //           );
-  //         }}
-  //       >
-  //         {/* <Form.Group widths="equal"> */}
-  //         <Form.Field>
-  //           <Form.Input
-  //             name="name"
-  //             placeholder="Enter your name"
-  //             onChange={this.handleChange}
-  //             value={this.state.name}
-  //           />
-  //         </Form.Field>
-  //         <Form.Field>
-  //           <Form.Input
-  //             name="email"
-  //             type="email"
-  //             placeholder="Enter your email address"
-  //             onChange={this.handleChange}
-  //             value={this.state.email}
-  //           />
-  //         </Form.Field>
-  //         <Form.Field>
-  //           <Form.Input
-  //             name="password"
-  //             type="password"
-  //             placeholder="Enter a password"
-  //             onChange={this.handleChange}
-  //             value={this.state.password}
-  //           />
-  //         </Form.Field>
-  //         {/* </Form.Group> */}
-  //         <br />
-  //         <Form.Button disabled={!this.isStateValid()}>
-  //           Create Account
-  //         </Form.Button>
-  //       </Form>
-  //       <br />
-  //     </div>
-  //   );
-  // }
-
   render() {
     return (
       <div className="login-background">
-        <Container id="white-background">
+        <Container id="login-white-background">
           <Row>
             <Col>
               <br />
-              <h1>App Name</h1>
-              <br />
+              <h1 className="logo">Running Mate</h1>
 
               <h2>Sign Up</h2>
+              <br />
               <Form
+                disabled={!this.isStateValid() || this.state.formSubmitted}
                 onSubmit={e => {
+                  this.setState({ formSubmitted: true });
                   e.preventDefault();
                   this.props.dispatch(
                     signUp(
@@ -143,15 +87,21 @@ class SignUp extends Component {
                 </Form.Group>
                 <br />
 
-                <Button
-                  disabled={!this.isStateValid()}
-                  className="btn-block"
-                  variant="primary"
-                  type="submit"
-                >
+                <Button className="btn-block" variant="primary" type="submit">
                   Sign Up
                 </Button>
               </Form>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <br />
+              <br />
+              <h3>Have an account?</h3>
+              <br />
+              <Button onClick={_ => this.props.history.push("/")}>
+                Go back to login
+              </Button>
             </Col>
           </Row>
         </Container>

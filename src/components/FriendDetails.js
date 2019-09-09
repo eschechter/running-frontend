@@ -7,6 +7,10 @@ import { withRouter } from "react-router-dom";
 import CompletedRunTable from "./CompletedRunTable";
 import CompletedRunsChart from "./CompletedRunsChart";
 
+import CardColumns from "react-bootstrap/CardColumns";
+import Card from "react-bootstrap/Card";
+import Button from "react-bootstrap/Button";
+
 import { fetchDetailedRun } from "../actions";
 
 class FriendDetails extends Component {
@@ -37,16 +41,30 @@ class FriendDetails extends Component {
     const pendingRuns = this.state.runs.filter(run => !run.completed);
 
     const pendingRunComps = pendingRuns.map(run => (
-      <li
-        onClick={_ =>
-          this.props.dispatch(fetchDetailedRun(this.props.history, run.id))
-        }
-      >{`Length: ${run.length} miles`}</li>
+      <Card border="primary" text="black" style={{ width: "18rem" }}>
+        <Card.Body>
+          <Card.Title>{`Length: ${run.length} miles`}</Card.Title>
+          <Card.Subtitle>{`City: ${run.city}`}</Card.Subtitle>
+          <br />
+          <Button
+            onClick={_ => {
+              this.props.dispatch(fetchDetailedRun(this.props.history, run.id));
+            }}
+            variant="primary"
+          >
+            View Map
+          </Button>
+        </Card.Body>
+      </Card>
     ));
     return (
       <>
         <h1>Details for {this.props.friend.name}</h1>
-        <ol>{pendingRunComps}</ol>
+        <br />
+        <h2>Planned Runs (click text to see map) </h2>
+        <div className="column-wrapper">
+          <CardColumns>{pendingRunComps}</CardColumns>
+        </div>
         <CompletedRunTable runs={completedRuns} />
         <CompletedRunsChart runs={completedRuns} />
       </>
