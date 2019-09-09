@@ -69,8 +69,6 @@ class NewRunMap extends Component {
 
   render() {
     let markerComps = [];
-    console.log(process.env);
-
     for (let i = 0; i < this.props.markers.length; i++) {
       markerComps.push(
         <Marker
@@ -127,7 +125,9 @@ class NewRunMap extends Component {
               onViewportChange={viewport =>
                 this.viewportChangeHandler(viewport)
               }
-              mapboxApiAccessToken={process.env.API_KEY}
+              mapboxApiAccessToken={
+                "pk.eyJ1IjoiZXNjaGVjaHRlciIsImEiOiJjanp2ZHltdHowa3gxM2hwNG5wcTIzd3N1In0.cFNxF0BjtiRL_VZNdEx40g"
+              }
             >
               {markerComps}
               <PolylineOverlay
