@@ -68,14 +68,18 @@ class RunsContainer extends Component {
           render={() => (
             <div id="runs-index">
               <br />
-              <h2>Planned Runs</h2>
+              {pendingRunComps.length > 0 ? (
+                <h2>Planned runs:</h2>
+              ) : (
+                <h2>No planned runs</h2>
+              )}
               <div className="column-wrapper">
                 <CardColumns>{pendingRunComps}</CardColumns>
               </div>
               <br />
               {completedRuns.length >= 1 ? (
                 <>
-                  <h2>Completed Runs (click city in left column to see map)</h2>
+                  <h2>Completed runs (click city in left column to see map)</h2>
                   <CompletedRunTable runs={completedRuns} />
                 </>
               ) : null}

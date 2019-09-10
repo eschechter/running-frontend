@@ -60,7 +60,11 @@ class FriendDetails extends Component {
       <>
         <h1>Details for {this.props.friend.name}</h1>
         <br />
-        <h2>Planned Runs (click text to see map) </h2>
+        {pendingRunComps.length > 0 ? (
+          <h2>Planned runs:</h2>
+        ) : (
+          <h2>No planned runs</h2>
+        )}
         <div className="column-wrapper">
           <CardColumns>{pendingRunComps}</CardColumns>
         </div>
