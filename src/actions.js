@@ -88,7 +88,7 @@ function signUp(user, history, alertCallback) {
           dispatch({ type: "SIGN_UP_USER", payload: data.user });
         }
       })
-      .catch(_ => alert("Could not connect to server"));
+      .catch(_ => alertCallback());
   };
 }
 
