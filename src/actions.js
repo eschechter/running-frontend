@@ -1,6 +1,6 @@
 import haversineSum from "./HelperFunctions/haversineSum";
 
-function loginUser(user, history) {
+function loginUser(user, history, alertCallback) {
   return function(dispatch) {
     fetch(`${process.env.REACT_APP_BACKEND_URL}/login`, {
       method: "POST",
@@ -14,8 +14,7 @@ function loginUser(user, history) {
     })
       .then(res => res.json())
       .then(data => {
-        if (data.message === "Invalid email or password")
-          alert("invalid email or password");
+        if (data.message === "Invalid email or password") alertCallback();
         else {
           history.push("/homepage");
           dispatch({ type: "LOGIN_USER", payload: data.user });
@@ -61,7 +60,7 @@ function retrieveUser(token, history) {
   };
 }
 
-function signUp(user, history) {
+function signUp(user, history, alertCallback) {
   return function(dispatch) {
     fetch(`${process.env.REACT_APP_BACKEND_URL}/sign-up`, {
       method: "POST",
@@ -79,9 +78,15 @@ function signUp(user, history) {
     })
       .then(res => res.json())
       .then(data => {
-        history.push("/homepage");
-        localStorage.setItem("running-token", data.jwt);
-        dispatch({ type: "SIGN_UP_USER", payload: data.user });
+        console.log("data", data);
+
+        if (data.status === 422) {
+          alertCallback();
+        } else {
+          history.push("/homepage");
+          localStorage.setItem("running-token", data.jwt);
+          dispatch({ type: "SIGN_UP_USER", payload: data.user });
+        }
       })
       .catch(_ => alert("Could not connect to server"));
   };

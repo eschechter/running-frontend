@@ -3,6 +3,7 @@ import { signUp } from "../actions.js";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
+import Alert from "react-bootstrap/Alert";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
@@ -14,11 +15,16 @@ class SignUp extends Component {
     name: "",
     email: "",
     password: "",
-    formSubmitted: false
+    formSubmitted: false,
+    showAlert: false
   };
 
   isStateValid = () => {
     return this.state.name && this.state.email && this.state.password;
+  };
+
+  alertCallback = _ => {
+    this.setState({ showAlert: true });
   };
 
   handleChange = event => {
@@ -32,6 +38,15 @@ class SignUp extends Component {
     return (
       <div className="login-background">
         <Container id="login-white-background">
+          {this.state.showAlert ? (
+            <Alert
+              variant="danger"
+              dismissible
+              onClose={_ => this.setState({ showAlert: false })}
+            >
+              Email already taken.
+            </Alert>
+          ) : null}
           <Row>
             <Col>
               <br />
@@ -51,7 +66,8 @@ class SignUp extends Component {
                         password: this.state.password,
                         name: this.state.name
                       },
-                      this.props.history
+                      this.props.history,
+                      this.alertCallback
                     )
                   );
                 }}

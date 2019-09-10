@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
+import Alert from "react-bootstrap/Alert";
+
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -13,7 +15,8 @@ import { connect } from "react-redux";
 class Login extends Component {
   state = {
     email: "",
-    password: ""
+    password: "",
+    showAlert: false
   };
 
   handleChange = event => {
@@ -23,10 +26,24 @@ class Login extends Component {
     });
   };
 
+  alertCallback = _ => {
+    this.setState({ showAlert: true });
+  };
+
   render() {
     return (
       <div className="login-background">
         <Container id="login-white-background">
+          {this.state.showAlert ? (
+            <Alert
+              variant="danger"
+              dismissible
+              onClose={_ => this.setState({ showAlert: false })}
+            >
+              Invalid email or password.
+            </Alert>
+          ) : null}
+
           <Row>
             <Col>
               <br />
@@ -42,7 +59,8 @@ class Login extends Component {
                         email: this.state.email,
                         password: this.state.password
                       },
-                      this.props.history
+                      this.props.history,
+                      this.alertCallback
                     )
                   );
                 }}
