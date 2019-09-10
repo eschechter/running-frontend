@@ -32,7 +32,12 @@ class RunsContainer extends Component {
     const pendingRuns = this.props.runs.filter(run => !run.completed);
 
     const pendingRunComps = pendingRuns.map(run => (
-      <Card border="primary" text="black" style={{ width: "18rem" }}>
+      <Card
+        key={run.id}
+        border="primary"
+        text="black"
+        style={{ width: "18rem" }}
+      >
         <Card.Body>
           <Card.Title>{`Length: ${run.length} miles`}</Card.Title>
           <Card.Subtitle>{`City: ${run.city}`}</Card.Subtitle>

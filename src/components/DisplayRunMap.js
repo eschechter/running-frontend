@@ -110,7 +110,7 @@ class DisplayRunMap extends Component {
             offsetLeft={-10}
             offsetTop={-10}
           >
-            <img width="20px" height="20px" src={image} />
+            <img width="20px" height="20px" src={image} alt="run marker" />
           </Marker>
         );
       }

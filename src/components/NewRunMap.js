@@ -52,7 +52,7 @@ class NewRunMap extends Component {
     this.setState({
       viewport: {
         ...this.state.viewport,
-        width: window.innerWidth * 0.99,
+        width: window.innerWidth * 0.97,
         height: window.innerHeight * 0.75
       }
     });
@@ -81,6 +81,7 @@ class NewRunMap extends Component {
           <img
             width="20px"
             height="20px"
+            alt="run marker"
             src={i === 0 ? startLine : runMarker}
           />
         </Marker>

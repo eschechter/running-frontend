@@ -34,7 +34,12 @@ class FriendRequestPage extends Component {
 
   render() {
     const userComps = this.props.users.map(user => (
-      <Card border="primary" text="black" style={{ width: "18rem" }}>
+      <Card
+        key={user.id}
+        border="primary"
+        text="black"
+        style={{ width: "18rem" }}
+      >
         <Card.Body>
           <Card.Title>{user.name}</Card.Title>
           <Card.Subtitle>{user.email}</Card.Subtitle>
@@ -54,7 +59,12 @@ class FriendRequestPage extends Component {
     ));
 
     const requestSenderComps = this.props.receivedFriendRequests.map(user => (
-      <Card border="primary" text="black" style={{ width: "18rem" }}>
+      <Card
+        key={user.id}
+        border="primary"
+        text="black"
+        style={{ width: "18rem" }}
+      >
         <Card.Body>
           <Card.Title>{user.name}</Card.Title>
           <Card.Subtitle>{user.email}</Card.Subtitle>
@@ -73,19 +83,20 @@ class FriendRequestPage extends Component {
     ));
 
     const requestReceiverComps = this.props.sentFriendRequests.map(user => (
-      <li>
+      <li key={user.id}>
         Name: {user.name}, Email: {user.email}{" "}
       </li>
     ));
 
     return (
       <>
+        <br />
         <h2>
           Search for friends (or leave blank to list all non-friended users):
         </h2>
         <br />
         <FriendSearchForm />
-        <div class="column-wrapper">
+        <div className="column-wrapper">
           <CardColumns>{userComps}</CardColumns>
         </div>
         <hr />
