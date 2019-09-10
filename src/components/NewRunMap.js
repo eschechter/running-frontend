@@ -90,6 +90,7 @@ class NewRunMap extends Component {
       <>
         <br />
         <h1>Distance: {haversineSum(this.props.markers)} miles</h1>
+        <h3>Click on the map to generate your run! </h3>
         <div id="new-map-button-div">
           <Button
             className="new-map-button"

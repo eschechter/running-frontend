@@ -39,6 +39,7 @@ class FinishRunForm extends Component {
               <Form.Label>Hours</Form.Label>
               <Form.Control
                 onChange={this.changeHandler}
+                value={this.state.hours}
                 name="hours"
                 type="number"
                 min={0}
@@ -50,6 +51,7 @@ class FinishRunForm extends Component {
 
               <Form.Control
                 onChange={this.changeHandler}
+                value={this.state.minutes}
                 name="minutes"
                 type="number"
                 min={0}
@@ -61,6 +63,7 @@ class FinishRunForm extends Component {
 
               <Form.Control
                 onChange={this.changeHandler}
+                value={this.state.seconds}
                 name="seconds"
                 type="number"
                 min={0}
@@ -71,7 +74,17 @@ class FinishRunForm extends Component {
           <br />
           <Form.Row>
             <Col>
-              <Button type="submit">Mark Run Complete</Button>
+              <Button
+                className="btn-block"
+                disabled={
+                  this.state.hours == 0 &&
+                  this.state.minutes == 0 &&
+                  this.state.seconds == 0
+                }
+                type="submit"
+              >
+                Mark Run Complete
+              </Button>
             </Col>
           </Form.Row>
         </Form>
