@@ -1,10 +1,8 @@
 import haversineSum from "./HelperFunctions/haversineSum";
 
-const BASE_URL = "https://running-mate-backend.herokuapp.com";
-
 function loginUser(user, history) {
   return function(dispatch) {
-    fetch(`${BASE_URL}/login`, {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -32,7 +30,7 @@ function loginUser(user, history) {
 
 function retrieveUser(token, history) {
   return function(dispatch) {
-    fetch(`${BASE_URL}/retrieve-user`, {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/retrieve-user`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -47,8 +45,9 @@ function retrieveUser(token, history) {
           alert("invalid token");
         else {
           if (
-            document.location.href === "running-mate.herokuapp.com" ||
-            document.location.href === "running-mate.herokuapp.com/sign-up"
+            document.location.href === process.env.REACT_APP_FRONTEND_URL ||
+            document.location.href ===
+              `${process.env.REACT_APP_FRONTEND_URL}/sign-up`
           ) {
             history.push("/homepage");
           }
@@ -64,7 +63,7 @@ function retrieveUser(token, history) {
 
 function signUp(user, history) {
   return function(dispatch) {
-    fetch(`${BASE_URL}/sign-up`, {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/sign-up`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -90,7 +89,9 @@ function signUp(user, history) {
 
 function fetchRuns() {
   return function(dispatch, getState) {
-    fetch(`${BASE_URL}/users/${getState().user.id}/runs`)
+    fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/users/${getState().user.id}/runs`
+    )
       .then(resp => resp.json())
       .then(runs => {
         dispatch({ type: "FETCH_RUNS", payload: runs });
@@ -103,7 +104,7 @@ function postRun(history) {
     if (getState().makeRunMarkers.length < 2) {
       alert("Your route must include at least two points");
     } else {
-      fetch(`${BASE_URL}/runs`, {
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/runs`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -131,7 +132,7 @@ function postRun(history) {
 
 function postFriendRun(history) {
   return function(dispatch, getState) {
-    fetch(`${BASE_URL}/runs`, {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/runs`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -156,7 +157,11 @@ function postFriendRun(history) {
 }
 function fetchRequestSenders() {
   return function(dispatch, getState) {
-    fetch(`${BASE_URL}/users/${getState().user.id}/request-senders`)
+    fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/users/${
+        getState().user.id
+      }/request-senders`
+    )
       .then(resp => resp.json())
       .then(users =>
         dispatch({ type: "FETCH_REQUEST_SENDERS", payload: users })
@@ -166,7 +171,11 @@ function fetchRequestSenders() {
 
 function fetchRequestReceivers() {
   return function(dispatch, getState) {
-    fetch(`${BASE_URL}/users/${getState().user.id}/request-receivers`)
+    fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/users/${
+        getState().user.id
+      }/request-receivers`
+    )
       .then(resp => resp.json())
       .then(users =>
         dispatch({ type: "FETCH_REQUEST_RECEIVERS", payload: users })
@@ -176,7 +185,9 @@ function fetchRequestReceivers() {
 
 function fetchFriends() {
   return function(dispatch, getState) {
-    fetch(`${BASE_URL}/users/${getState().user.id}/friends`)
+    fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/users/${getState().user.id}/friends`
+    )
       .then(resp => resp.json())
       .then(users => dispatch({ type: "FETCH_FRIENDS", payload: users }));
   };
@@ -184,7 +195,7 @@ function fetchFriends() {
 
 function fetchDetailedRun(history, runId) {
   return function(dispatch) {
-    fetch(`${BASE_URL}/runs/${runId}`)
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/runs/${runId}`)
       .then(resp => resp.json())
       .then(run => {
         dispatch({ type: "FETCH_DETAILED_RUN", payload: run });
@@ -195,16 +206,19 @@ function fetchDetailedRun(history, runId) {
 
 function completeRun(duration) {
   return function(dispatch, getState) {
-    fetch(`${BASE_URL}/runs/${getState().displayedRun.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json"
-      },
-      body: JSON.stringify({
-        duration
-      })
-    })
+    fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/runs/${getState().displayedRun.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Accepts: "application/json"
+        },
+        body: JSON.stringify({
+          duration
+        })
+      }
+    )
       .then(resp => resp.json())
       .then(run => {
         dispatch({ type: "COMPLETE_RUN", payload: run.duration });
@@ -215,7 +229,11 @@ function completeRun(duration) {
 
 function searchUsers(searchTerm) {
   return function(dispatch, getState) {
-    fetch(`${BASE_URL}/users/${getState().user.id}/search/${searchTerm}`)
+    fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/users/${
+        getState().user.id
+      }/search/${searchTerm}`
+    )
       .then(resp => resp.json())
       .then(friends => {
         dispatch({ type: "SEARCH_USERS", payload: friends });
@@ -225,13 +243,18 @@ function searchUsers(searchTerm) {
 
 function requestFriend(friendUserId) {
   return function(dispatch, getState) {
-    fetch(`${BASE_URL}/users/request/${getState().user.id}/${friendUserId}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accepts: "application/json"
+    fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/users/request/${
+        getState().user.id
+      }/${friendUserId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accepts: "application/json"
+        }
       }
-    })
+    )
       .then(resp => resp.json())
       .then(user => {
         dispatch({
@@ -250,7 +273,7 @@ function requestFriend(friendUserId) {
 function acceptFriendRequest(friendUserId) {
   return function(dispatch, getState) {
     fetch(
-      `${BASE_URL}/users/complete_request/${
+      `${process.env.REACT_APP_BACKEND_URL}/users/complete_request/${
         getState().user.id
       }/${friendUserId}`,
       {
