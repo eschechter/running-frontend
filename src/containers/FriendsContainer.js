@@ -34,7 +34,12 @@ class FriendsContainer extends Component {
 
   render() {
     const friendsComps = this.props.friends.map(user => (
-      <Card bg="primary" text="black" style={{ width: "18rem" }}>
+      <Card
+        key={user.id}
+        text="black"
+        border="primary"
+        style={{ width: "18rem" }}
+      >
         <Card.Body>
           <Card.Title>{user.name}</Card.Title>
           <Card.Subtitle>{user.email}</Card.Subtitle>
