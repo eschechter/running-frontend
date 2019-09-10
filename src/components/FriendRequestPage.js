@@ -83,9 +83,17 @@ class FriendRequestPage extends Component {
     ));
 
     const requestReceiverComps = this.props.sentFriendRequests.map(user => (
-      <li key={user.id}>
-        Name: {user.name}, Email: {user.email}{" "}
-      </li>
+      <Card
+        key={user.id}
+        border="primary"
+        text="black"
+        style={{ width: "18rem" }}
+      >
+        <Card.Body>
+          <Card.Title>{user.name}</Card.Title>
+          <Card.Subtitle>{user.email}</Card.Subtitle>
+        </Card.Body>
+      </Card>
     ));
 
     return (
@@ -103,7 +111,10 @@ class FriendRequestPage extends Component {
 
         {requestReceiverComps.length > 0 ? (
           <>
-            <h2>Sent requests:</h2> {requestReceiverComps}
+            <h2>Sent requests:</h2>
+            <div className="column-wrapper">
+              <CardColumns>{requestReceiverComps}</CardColumns>
+            </div>
           </>
         ) : (
           <h2>No sent requests</h2>
