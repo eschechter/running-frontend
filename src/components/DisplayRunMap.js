@@ -21,6 +21,9 @@ import speedCalculator from "../HelperFunctions/speedCalculator";
 
 import { postFriendRun } from "../actions";
 
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 
 class DisplayRunMap extends Component {
@@ -156,16 +159,24 @@ class DisplayRunMap extends Component {
             </>
           )}
           {this.props.displayedRun.user_id !== this.props.user.id ? (
-            <Button
-              className="btn-block"
-              disabled={this.state.formSubmitted}
-              onClick={_ => {
-                this.setState({ formSubmitted: true });
-                this.props.postRun(this.props.history);
-              }}
-            >
-              Copy this run for yourself!
-            </Button>
+            <>
+              <br />
+              <Container>
+                <Row>
+                  {" "}
+                  <Button
+                    className="btn-block"
+                    disabled={this.state.formSubmitted}
+                    onClick={_ => {
+                      this.setState({ formSubmitted: true });
+                      this.props.postRun(this.props.history);
+                    }}
+                  >
+                    Copy this run for yourself!
+                  </Button>
+                </Row>
+              </Container>
+            </>
           ) : null}
 
           <br />
