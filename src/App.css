@@ -89,6 +89,7 @@ background: linear-gradient(to right, #EAEAEA, #DBDBDB, #F2F2F2, #ADA996); /* W3
   text-align: center;
 }
 
+
 .login-background {
   background-image: url('./images/background.png');
   background-position: center;
@@ -116,17 +117,37 @@ h1 {
 
   margin-left: 10px;
   margin-right: 10px;
+  font-family: 'Poppins', cursive;
 
 }
 
 h2 {
   margin-left: 10px;
   margin-right: 10px;
+  font-family: 'Poppins', cursive;
+
 }
 
 h3 {
   margin-left: 10px;
   margin-right: 10px;
+  font-family: 'Poppins', cursive;
+
+}
+
+.button-toggle-wrapper {
+  text-align: center
+}
+
+.btn-group-toggle{
+  display: inline-block
+}
+
+.btn-group-toggle .btn {
+  margin: 5px;
+  min-width: 160px;
+  max-width: 160px;
+  
 }
 
 .outer-map-wrapper {

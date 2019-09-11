@@ -55,6 +55,7 @@ class SignUp extends Component {
             <Col>
               <br />
               <h1 className="logo">Running Mate</h1>
+              <br />
 
               <h2>Sign Up</h2>
               <br />

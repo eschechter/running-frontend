@@ -63,6 +63,8 @@ class FriendDetails extends Component {
     ));
     return (
       <>
+        <br />
+
         <h1>Details for {this.props.friend.name}</h1>
         <br />
         {pendingRunComps.length > 0 ? (

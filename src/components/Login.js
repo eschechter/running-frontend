@@ -47,6 +47,7 @@ class Login extends Component {
             <Col>
               <br />
               <h1 className="logo">Running Mate</h1>
+              <br />
               <h2>Sign In</h2>
               <br />
               <Form

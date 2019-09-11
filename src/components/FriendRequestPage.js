@@ -5,6 +5,8 @@ import FriendSearchForm from "./FriendSearchForm";
 import Card from "react-bootstrap/Card";
 import CardColumns from "react-bootstrap/CardColumns";
 import Button from "react-bootstrap/Button";
+import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
+import ToggleButton from "react-bootstrap/ToggleButton";
 
 import { connect } from "react-redux";
 import {
@@ -16,6 +18,10 @@ import {
 } from "../actions";
 
 class FriendRequestPage extends Component {
+  state = {
+    showingReceived: true
+  };
+
   componentDidUpdate(prevProps) {
     if (prevProps.user.id !== this.props.user.id) {
       this.props.fetchRequestSenders();
@@ -31,6 +37,10 @@ class FriendRequestPage extends Component {
       this.props.searchUsers();
     }
   }
+
+  handleChange = val => {
+    this.setState({ showingReceived: val });
+  };
 
   render() {
     const userComps = this.props.users.map(user => (
@@ -108,20 +118,32 @@ class FriendRequestPage extends Component {
           <CardColumns>{userComps}</CardColumns>
         </div>
         <hr />
-
-        {requestReceiverComps.length > 0 ? (
-          <>
-            <h2>Sent requests:</h2>
-            <div className="column-wrapper">
-              <CardColumns>{requestReceiverComps}</CardColumns>
-            </div>
-          </>
-        ) : (
-          <h2>No sent requests</h2>
-        )}
-        <hr />
-
-        {requestSenderComps.length > 0 ? (
+        <div className="button-toggle-wrapper">
+          <ToggleButtonGroup
+            type="radio"
+            name="radio"
+            value={this.state.showingReceived}
+            onChange={this.handleChange}
+          >
+            <ToggleButton value={true}>Received Requests</ToggleButton>
+            &nbsp;
+            <ToggleButton value={false}>Sent Requests</ToggleButton>
+          </ToggleButtonGroup>
+          <br />
+          <br />
+        </div>
+        {!this.state.showingReceived ? (
+          requestReceiverComps.length > 0 ? (
+            <>
+              <h2>Sent requests:</h2>
+              <div className="column-wrapper">
+                <CardColumns>{requestReceiverComps}</CardColumns>
+              </div>
+            </>
+          ) : (
+            <h2>No sent requests</h2>
+          )
+        ) : requestSenderComps.length > 0 ? (
           <>
             <h2>Received requests:</h2> {requestSenderComps}
           </>
