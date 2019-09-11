@@ -157,6 +157,7 @@ class DisplayRunMap extends Component {
           )}
           {this.props.displayedRun.user_id !== this.props.user.id ? (
             <Button
+              className="btn-block"
               disabled={this.state.formSubmitted}
               onClick={_ => {
                 this.setState({ formSubmitted: true });

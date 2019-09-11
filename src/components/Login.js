@@ -34,15 +34,14 @@ class Login extends Component {
     return (
       <div className="login-background">
         <Container id="login-white-background">
-          {this.state.showAlert ? (
-            <Alert
-              variant="danger"
-              dismissible
-              onClose={_ => this.setState({ showAlert: false })}
-            >
-              Invalid email or password.
-            </Alert>
-          ) : null}
+          <Alert
+            show={this.state.showAlert}
+            variant="danger"
+            dismissible
+            onClose={_ => this.setState({ showAlert: false })}
+          >
+            Invalid email or password.
+          </Alert>
 
           <Row>
             <Col>

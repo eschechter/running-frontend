@@ -27,6 +27,10 @@ class SignUp extends Component {
     this.setState({ showAlert: true });
   };
 
+  enableCallback = () => {
+    this.setState({ formSubmitted: false });
+  };
+
   handleChange = event => {
     const inputType = event.target.name;
     this.setState({
@@ -35,18 +39,19 @@ class SignUp extends Component {
   };
 
   render() {
+    console.log(this.props.location);
     return (
       <div className="login-background">
         <Container id="login-white-background">
-          {this.state.showAlert ? (
-            <Alert
-              variant="danger"
-              dismissible
-              onClose={_ => this.setState({ showAlert: false })}
-            >
-              Email already taken.
-            </Alert>
-          ) : null}
+          <Alert
+            show={this.state.showAlert}
+            variant="danger"
+            dismissible
+            onClose={_ => this.setState({ showAlert: false })}
+          >
+            Email already taken.
+          </Alert>
+
           <Row>
             <Col>
               <br />
@@ -55,7 +60,6 @@ class SignUp extends Component {
               <h2>Sign Up</h2>
               <br />
               <Form
-                disabled={!this.isStateValid() || this.state.formSubmitted}
                 onSubmit={e => {
                   this.setState({ formSubmitted: true });
                   e.preventDefault();
@@ -67,7 +71,8 @@ class SignUp extends Component {
                         name: this.state.name
                       },
                       this.props.history,
-                      this.alertCallback
+                      this.alertCallback,
+                      this.enableCallback
                     )
                   );
                 }}
@@ -103,7 +108,12 @@ class SignUp extends Component {
                 </Form.Group>
                 <br />
 
-                <Button className="btn-block" variant="primary" type="submit">
+                <Button
+                  disabled={!this.isStateValid() || this.state.formSubmitted}
+                  className="btn-block"
+                  variant="primary"
+                  type="submit"
+                >
                   Sign Up
                 </Button>
               </Form>

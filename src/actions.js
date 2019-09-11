@@ -14,8 +14,9 @@ function loginUser(user, history, alertCallback) {
     })
       .then(res => res.json())
       .then(data => {
-        if (data.message === "Invalid email or password") alertCallback();
-        else {
+        if (data.message === "Invalid email or password") {
+          alertCallback();
+        } else {
           history.push("/homepage");
           dispatch({ type: "LOGIN_USER", payload: data.user });
           localStorage.setItem("running-token", data.jwt);
@@ -60,7 +61,7 @@ function retrieveUser(token, history) {
   };
 }
 
-function signUp(user, history, alertCallback) {
+function signUp(user, history, alertCallback, enableCallback) {
   return function(dispatch) {
     fetch(`${process.env.REACT_APP_BACKEND_URL}/sign-up`, {
       method: "POST",
@@ -82,10 +83,12 @@ function signUp(user, history, alertCallback) {
 
         if (data.status === 422) {
           alertCallback();
+          enableCallback();
         } else {
           history.push("/homepage");
           localStorage.setItem("running-token", data.jwt);
           dispatch({ type: "SIGN_UP_USER", payload: data.user });
+          enableCallback();
         }
       })
       .catch(_ => alertCallback());
