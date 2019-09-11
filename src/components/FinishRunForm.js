@@ -77,9 +77,9 @@ class FinishRunForm extends Component {
               <Button
                 className="btn-block"
                 disabled={
-                  this.state.hours === 0 &&
-                  this.state.minutes === 0 &&
-                  this.state.seconds === 0
+                  Number(this.state.hours) === 0 &&
+                  Number(this.state.minutes) === 0 &&
+                  Number(this.state.seconds) === 0
                 }
                 type="submit"
               >
