@@ -89,7 +89,10 @@ function signUp(user, history, alertCallback, enableCallback) {
           enableCallback();
         }
       })
-      .catch(_ => alertCallback());
+      .catch(_ => {
+        alertCallback();
+        enableCallback();
+      });
   };
 }
 

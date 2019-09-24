@@ -39,7 +39,6 @@ class SignUp extends Component {
   };
 
   render() {
-    console.log(this.state.formSubmitted);
     return (
       <div className="login-background">
         <Container id="login-white-background">
