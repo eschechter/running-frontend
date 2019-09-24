@@ -79,7 +79,7 @@ function signUp(user, history, alertCallback, enableCallback) {
     })
       .then(res => res.json())
       .then(data => {
-        if (data.status === 422) {
+        if (!data.user) {
           alertCallback();
           enableCallback();
         } else {
