@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "chart.js": "^2.8.0",
+    "chart.js": "^2.9.4",
     "deck.gl": "^7.2.2",
     "haversine-distance": "^1.1.4",
     "mapbox-gl": "^1.2.1",
